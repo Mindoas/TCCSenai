@@ -2,8 +2,8 @@
 // Configurações do banco de dados
 $servidor = "localhost";
 $usuario = "root";
-$senha = "senai123";
-$banco = "meu_banco_de_dados";
+$senha = "";
+$banco = "meu_banco_frequencia";
 
 // Cria a conexão
 $conn = new mysqli($servidor, $usuario, $senha, $banco);

@@ -64,6 +64,24 @@
         #card-form button:hover {
             background-color: #45a049;
         }
+
+        /* Estilo dos alertas */
+        .alertas p {
+            font-weight: bold;
+        }
+
+        .alertas ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .alertas li {
+            background: #f4f4f4;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -82,11 +100,13 @@
             <button class="back-button" onclick="location.href='index.html'">Voltar ao Inicio</button>
             <button class="add" id="open-popup">Adicionar Cartão</button>
             <button class="delete">Excluir Cartão</button>
-            <button class="view">Ver Cadastros</button>
+            <button class="view" id="view-cards">Ver Cadastros</button>
         </div>
         <div class="alertas">
             <p>ALERTAS</p>
-            <!-- Área para alertas ou mensagens -->
+            <ul id="card-list">
+                <!-- Lista de cartões será inserida aqui -->
+            </ul>
         </div>
     </div>
 
@@ -111,6 +131,8 @@
         const popup = document.getElementById('popup');
         const closePopupButton = document.querySelector('.close-btn');
         const form = document.getElementById('card-form');
+        const viewCardsButton = document.getElementById('view-cards');
+        const cardList = document.getElementById('card-list');
 
         // Função para abrir o pop-up
         openPopupButton.addEventListener('click', () => {
@@ -147,6 +169,7 @@
                     alert(data.message);
                     popup.style.display = 'none'; // Fecha o pop-up
                     form.reset(); // Reseta o formulário
+                    loadCards(); // Recarrega a lista de cartões
                 } else {
                     alert(data.message);
                 }
@@ -156,6 +179,30 @@
                 alert('Erro ao salvar o cartão.');
             });
         });
+
+        // Função para carregar e exibir os cartões
+        function loadCards() {
+            fetch('get_cards.php')
+                .then(response => response.json())
+                .then(data => {
+                    cardList.innerHTML = ''; // Limpa a lista existente
+                    data.forEach(card => {
+                        const li = document.createElement('li');
+                        li.textContent = `${card.nome}: ${card.info}`;
+                        cardList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao carregar os cartões.');
+                });
+        }
+
+        // Carregar cartões ao abrir a página
+        window.addEventListener('load', loadCards);
+
+        // Recarregar a lista de cartões quando o botão "Ver Cadastros" for clicado
+        viewCardsButton.addEventListener('click', loadCards);
     </script>
 </body>
 </html>
