@@ -1,0 +1,113 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    background-color: #ffffff;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 700px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.content .options {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px; /* Espaço entre as opções e a área de alertas */
+}
+
+.content .options h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.content .options button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.content .options button.add {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.content .options button.delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.content .options button.view {
+    background-color: #2b32f3;
+    color: white;
+}
+
+.content .options button.back-button {
+    background-color: #d74af6;
+    color: white;
+}
+
+.content .options button:hover {
+    opacity: 0.8;
+}
+
+.sidebar h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.alertas {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    color: #333;
+    height: 500px;
+    text-align: center;
+    font-size: 30px;
+}
+
+.title{
+    text-align: center;
+    font-size: 30px;
+    background-color: #f4584d;
+    width: 700px;
+    padding-bottom: 20px; /* Espaço para o botão */
+}
+
+.back-button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    color: #333;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.back-button:hover {
+    background-color: #e0e0e0;
+}

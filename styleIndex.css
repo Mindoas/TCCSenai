@@ -1,0 +1,120 @@
+body {
+    background-color: rgb(212,212,212);
+    font-family: "Roboto", sans-serif;
+    margin: 0;
+    padding: 0;
+    justify-content: center; /* Centraliza o .container na horizontal */
+    align-items: center; /* Centraliza o .container na vertical */
+    height: 100vh; /* Garante que o corpo ocupe toda a altura da tela */
+}
+
+.container {
+    background-color: white;
+    width: 70%;
+    height: 500px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center; /* Distribui os elementos .esquerda e .direita horizontalmente */
+    border-radius: 20px;
+    align-items: center;
+}
+
+.esquerda, .direita {
+    flex-grow: 1; /* Faz com que ambos ocupem o espaço disponível */
+    text-align: center;
+    
+}
+
+.esquerda {
+    width: 65%;
+    
+}
+
+.direita {
+    width: 35%;
+    border: solid 7px green;
+    border-radius: 0px 20px 20px 0px;
+}
+
+h2 {
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+
+p {
+    font-size: 30px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+ul {
+    padding: 10px;
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    padding: 10px 5px;
+    border-color: #ddd;
+    background-color: #f7f7f7;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+button {
+    background-color: #e51212;
+    color: #fff;
+    font-size: 8px;
+    width: 150px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.centro{
+    margin-top: 3%;
+}
+
+.logo{
+    text-align: center;
+}
+
+.slc_arq{
+    font-size: 30px;
+    color: #666;
+    margin-bottom: 0px;
+}
+
+.inferior{
+    text-align: center;
+}
+
+#alunosPresentes{
+    background-color: #c7c7c7
+}
+
+img{
+    width: 200px;
+}
+
+#codigoAluno{
+    margin-top: 0%;
+    border: solid 2px black;
+}
+
+.aluno_baixo{
+    color: green;
+    font-size: 13px;
+}
