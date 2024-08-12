@@ -1,7 +1,13 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: rgb(212,212,212);
+
+    background-image: url('caminho/para/sua/imagem.jpg');
+    background-size: cover; /* Ajusta a imagem para cobrir toda a tela */
+    background-position: center; /* Centraliza a imagem */
+    background-repeat: no-repeat; /* Evita que a imagem se repita */
+    height: 100vh; /* Garante que o fundo ocupe toda a altura da tela */
     margin: 0;
+
+    font-family: Arial, sans-serif;
     padding: 0;
     display: flex;
     justify-content: center;
