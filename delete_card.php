@@ -1,12 +1,15 @@
 <?php
 // Configurações do banco de dados
-$servidor = "localhost";
-$usuario = "root";
-$senha = "";
-$banco = "meu_banco_frequencia";
+$servidor = "10.138.50.12"; // IP do servidor MySQL
+$usuario = "root"; // Usuário do MySQL
+$senha = ""; // Senha do MySQL
+$banco = "meu_banco_frequencia"; // Nome do banco de dados
+
+// Porta do MySQL (opcional, o padrão é 3306, substitua se necessário)
+$porta = 3306;
 
 // Cria a conexão
-$conn = new mysqli($servidor, $usuario, $senha, $banco);
+$conn = new mysqli($servidor, $usuario, $senha, $banco, $porta);
 
 // Verifica a conexão
 if ($conn->connect_error) {
@@ -31,3 +34,4 @@ if ($stmt->execute()) {
 $stmt->close();
 $conn->close();
 ?>
+
