@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Mensagens</title>
+</head>
+<body>
+    <h1>Digite uma Mensagem</h1>
+    <form id="mensagemForm">
+        <label for="texto">Mensagem:</label>
+        <input type="text" id="texto" name="texto" required>
+        <button type="submit">Salvar</button>
+    </form>
+
+    <h2>Mensagens Salvas</h2>
+    <div id="mensagens"></div>
+
+    <script>
+        document.getElementById('mensagemForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita o envio do formulário
+
+            var texto = document.getElementById('texto').value;
+
+            // Envia o texto para o servidor usando fetch
+            fetch('salvar.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'texto': texto
+                })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data); // Pode ser útil para depuração
+                document.getElementById('texto').value = ''; // Limpa o campo de entrada
+                carregarMensagens(); // Atualiza a lista de mensagens
+            })
+            .catch(error => console.error('Erro:', error));
+        });
+
+        function carregarMensagens() {
+            // Envia uma solicitação para obter as mensagens salvas
+            fetch('mostrar.php')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('mensagens').innerHTML = data;
+                })
+                .catch(error => console.error('Erro:', error));
+        }
+
+        // Carrega as mensagens ao carregar a página
+        window.onload = carregarMensagens;
+    </script>
+</body>
+</html>
