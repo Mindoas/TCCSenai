@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Administração</title>
     <link rel="stylesheet" href="styleAdmin.css">
+
 </head>
 <body>
     <div class="sidebar">
@@ -20,7 +21,7 @@
         <div class="options">
             <h2>OPÇÕES</h2>
             <button class="back-button" onclick="location.href='index.html'">Voltar ao Inicio</button>
-            <button class="add">Adicionar Cartão</button>
+            <button class="add" id="open-popup">Adicionar Cartão</button>
             <button class="delete">Excluir Cartão</button>
             <button class="view">Ver Cadastros</button>
         </div>
@@ -29,5 +30,44 @@
             <!-- Área para alertas ou mensagens -->
         </div>
     </div>
+
+    <!-- O Pop-Up -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h2>Adicionar Cartão</h2>
+            <form id="card-form">
+                <label for="card-name">Nome do Aluno:</label>
+                <input type="text" id="card-name" name="card-name" required><br><br>
+                <label for="card-info">Informações do Cartão:</label>
+                <textarea id="card-info" name="card-info" required></textarea><br><br>
+                <button type="submit">Adicionar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Selecionar elementos
+        const openPopupButton = document.getElementById('open-popup');
+        const popup = document.getElementById('popup');
+        const closePopupButton = document.querySelector('.close-btn');
+
+        // Função para abrir o pop-up
+        openPopupButton.addEventListener('click', () => {
+            popup.style.display = 'block';
+        });
+
+        // Função para fechar o pop-up
+        closePopupButton.addEventListener('click', () => {
+            popup.style.display = 'none';
+        });
+
+        // Fechar o pop-up quando clicar fora do conteúdo
+        window.addEventListener('click', (event) => {
+            if (event.target === popup) {
+                popup.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
