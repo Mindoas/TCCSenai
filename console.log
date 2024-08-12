@@ -1,0 +1,33 @@
+function deleteCard(id) {
+    if (confirm('Tem certeza de que deseja excluir este cartão?')) {
+        fetch('delete_card.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                'id': id
+            })
+        })
+        .then(response => response.text()) // Recebe como texto para depuração
+        .then(text => {
+            console.log('Resposta do servidor:', text); // Adiciona log da resposta
+            try {
+                const data = JSON.parse(text); // Tenta parsear como JSON
+                if (data.status === 'success') {
+                    alert(data.message);
+                    loadCards(); // Recarrega a lista de cartões
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Erro de parsing JSON:', error);
+                alert('Resposta do servidor não é JSON válido.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao excluir o cartão.');
+        });
+    }
+}

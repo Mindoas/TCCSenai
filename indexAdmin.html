@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,21 +9,21 @@
     <style>
         /* Estilo do Pop-Up */
         .popup {
-            display: none; /* Esconder o pop-up por padrão */
-            position: fixed; /* Ficar fixo na tela */
+            display: none;
+            position: fixed;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
-            z-index: 1000; /* Ficar sobre outros elementos */
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
         }
 
         .popup-content {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%); /* Centralizar o pop-up */
+            transform: translate(-50%, -50%);
             background: #fff;
             padding: 20px;
             border-radius: 5px;
@@ -37,14 +38,22 @@
             font-size: 20px;
             cursor: pointer;
         }
+
+        .delete-button {
+            color: red;
+            cursor: pointer;
+            font-size: 14px;
+            border: none;
+            background: none;
+        }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <div class="title">
             <h1>Painel Administrador</h1>
         </div>
-        
         <div class="blank-space">
             <!-- Nomes dos alunos já presentes -->
         </div>
@@ -117,34 +126,46 @@
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert(data.message);
-                    popup.style.display = 'none'; // Fecha o pop-up
-                    form.reset(); // Reseta o formulário
-                    loadCards(); // Recarrega a lista de cartões
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao salvar o cartão.');
-            });
+                .then(response => response.text()) // Recebe como texto para depuração
+                .then(text => {
+                    try {
+                        const data = JSON.parse(text); // Tenta parsear como JSON
+                        if (data.status === 'success') {
+                            alert(data.message);
+                            popup.style.display = 'none'; // Fecha o pop-up
+                            form.reset(); // Reseta o formulário
+                            loadCards(); // Recarrega a lista de cartões
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Erro de parsing JSON:', error);
+                        alert('Resposta do servidor não é JSON válido.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao salvar o cartão.');
+                });
         });
 
         // Função para carregar e exibir os cartões
         function loadCards() {
             fetch('get_cards.php')
-                .then(response => response.json())
-                .then(data => {
-                    cardList.innerHTML = ''; // Limpa a lista existente
-                    data.forEach(card => {
-                        const li = document.createElement('li');
-                        li.innerHTML = `${card.nome}: ${card.info} <button onclick="deleteCard(${card.id})">Excluir</button>`;
-                        cardList.appendChild(li);
-                    });
+                .then(response => response.text()) // Recebe como texto para depuração
+                .then(text => {
+                    try {
+                        const data = JSON.parse(text); // Tenta parsear como JSON
+                        cardList.innerHTML = ''; // Limpa a lista existente
+                        data.forEach(card => {
+                            const li = document.createElement('li');
+                            li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
+                            cardList.appendChild(li);
+                        });
+                    } catch (error) {
+                        console.error('Erro de parsing JSON:', error);
+                        alert('Resposta do servidor não é JSON válido.');
+                    }
                 })
                 .catch(error => {
                     console.error('Erro:', error);
@@ -164,19 +185,31 @@
                         'id': id
                     })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        alert(data.message);
-                        loadCards(); // Recarrega a lista de cartões
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao excluir o cartão.');
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro na resposta do servidor: ' + response.statusText);
+                        }
+                        return response.text(); // Recebe a resposta como texto para depuração
+                    })
+                    .then(text => {
+                        console.log('Texto recebido do servidor:', text); // Log da resposta
+                        try {
+                            const data = JSON.parse(text); // Tenta parsear como JSON
+                            if (data.status === 'success') {
+                                alert(data.message);
+                                loadCards(); // Recarrega a lista de cartões
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (error) {
+                            console.error('Erro de parsing JSON:', error);
+                            alert('Resposta do servidor não é JSON válido.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Erro ao excluir o cartão.');
+                    });
             }
         }
 
@@ -187,4 +220,5 @@
         viewCardsButton.addEventListener('click', loadCards);
     </script>
 </body>
+
 </html>
