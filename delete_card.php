@@ -1,0 +1,33 @@
+<?php
+// Configurações do banco de dados
+$servidor = "localhost";
+$usuario = "root";
+$senha = "";
+$banco = "meu_banco_frequencia";
+
+// Cria a conexão
+$conn = new mysqli($servidor, $usuario, $senha, $banco);
+
+// Verifica a conexão
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+// Obtém o ID do cartão
+$id = $_POST['id'];
+
+// Prepara a consulta SQL para excluir o cartão
+$stmt = $conn->prepare("DELETE FROM cartoes WHERE id = ?");
+$stmt->bind_param("i", $id);
+
+// Executa a consulta
+if ($stmt->execute()) {
+    echo json_encode(['status' => 'success', 'message' => 'Cartão excluído com sucesso!']);
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Erro ao excluir o cartão.']);
+}
+
+// Fecha a conexão
+$stmt->close();
+$conn->close();
+?>

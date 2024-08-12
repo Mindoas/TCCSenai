@@ -5,84 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Administração</title>
     <link rel="stylesheet" href="styleAdmin.css">
-    <style>
-        /* Estilo do Pop-Up */
-        .popup {
-            display: none; /* Esconder o pop-up por padrão */
-            position: fixed; /* Ficar fixo na tela */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
-            z-index: 1000; /* Ficar sobre outros elementos */
-        }
-
-        .popup-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* Centralizar o pop-up */
-            background: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            width: 300px;
-            text-align: center;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        /* Adicionar estilo ao formulário */
-        #card-form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        #card-form input,
-        #card-form textarea {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        #card-form button {
-            padding: 10px;
-            border: none;
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        #card-form button:hover {
-            background-color: #45a049;
-        }
-
-        /* Estilo dos alertas */
-        .alertas p {
-            font-weight: bold;
-        }
-
-        .alertas ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .alertas li {
-            background: #f4f4f4;
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-    </style>
+ 
 </head>
 <body>
     <div class="sidebar">
@@ -99,11 +22,10 @@
             <h2>OPÇÕES</h2>
             <button class="back-button" onclick="location.href='index.html'">Voltar ao Inicio</button>
             <button class="add" id="open-popup">Adicionar Cartão</button>
-            <button class="delete">Excluir Cartão</button>
             <button class="view" id="view-cards">Ver Cadastros</button>
         </div>
-        <div class="alertas">
-            <p>ALERTAS</p>
+        <div class="card-list">
+            <h2>Lista de Cartões</h2>
             <ul id="card-list">
                 <!-- Lista de cartões será inserida aqui -->
             </ul>
@@ -188,7 +110,7 @@
                     cardList.innerHTML = ''; // Limpa a lista existente
                     data.forEach(card => {
                         const li = document.createElement('li');
-                        li.textContent = `${card.nome}: ${card.info}`;
+                        li.innerHTML = `${card.nome}: ${card.info} <button onclick="deleteCard(${card.id})">Excluir</button>`;
                         cardList.appendChild(li);
                     });
                 })
@@ -196,6 +118,34 @@
                     console.error('Erro:', error);
                     alert('Erro ao carregar os cartões.');
                 });
+        }
+
+        // Função para excluir um cartão
+        function deleteCard(id) {
+            if (confirm('Tem certeza de que deseja excluir este cartão?')) {
+                fetch('delete_card.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        'id': id
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        loadCards(); // Recarrega a lista de cartões
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao excluir o cartão.');
+                });
+            }
         }
 
         // Carregar cartões ao abrir a página
