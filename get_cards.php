@@ -1,6 +1,6 @@
 <?php
 // Configurações do banco de dados
-$servidor = "10.138.50.12";
+$servidor = "localhost";
 $usuario = "root";
 $senha = "";
 $banco = "meu_banco_frequencia";
