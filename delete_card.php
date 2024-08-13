@@ -1,13 +1,12 @@
 <?php
 // Configurações do banco de dados
-$servidor = "10.138.50.12";
+$servidor = "localhost";
 $usuario = "root";
 $senha = "";
 $banco = "meu_banco_frequencia";
-$porta = 3306;
 
 // Cria a conexão
-$conn = new mysqli($servidor, $usuario, $senha, $banco, $porta);
+$conn = new mysqli($servidor, $usuario, $senha, $banco);
 
 // Verifica a conexão
 if ($conn->connect_error) {
@@ -18,6 +17,9 @@ if ($conn->connect_error) {
 
 // Obtém o ID do cartão
 $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+
+// Adiciona a linha para verificar o ID recebido
+error_log("ID recebido: " . $id);
 
 // Prepara a consulta SQL para excluir o cartão
 if ($id > 0 && $stmt = $conn->prepare("DELETE FROM cartoes WHERE id = ?")) {

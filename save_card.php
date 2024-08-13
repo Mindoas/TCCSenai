@@ -4,6 +4,7 @@ $servidor = "localhost";
 $usuario = "root";
 $senha = "";
 $banco = "meu_banco_frequencia";
+$porta = 3306;
 
 // Cria a conexão
 $conn = new mysqli($servidor, $usuario, $senha, $banco);
