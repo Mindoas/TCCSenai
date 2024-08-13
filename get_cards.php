@@ -1,11 +1,10 @@
 <?php
 // Configurações do banco de dados
-$servidor = "10.138.50.12";
+$servidor = "localhost";
 $usuario = "root";
 $senha = "";
 $banco = "meu_banco_frequencia";
-$porta = 3306;
-
+$porta = "3306";
 
 // Cria a conexão
 $conn = new mysqli($servidor, $usuario, $senha, $banco);
@@ -16,7 +15,7 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL para obter os dados
-$sql = "SELECT id, nome, info FROM cartoes";
+$sql = "SELECT id,nome, info FROM cartoes";
 $result = $conn->query($sql);
 
 // Inicializa um array para armazenar os dados
