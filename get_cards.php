@@ -16,7 +16,7 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL para obter os dados
-$sql = "SELECT nome, info FROM cartoes";
+$sql = "SELECT id, nome, info FROM cartoes";
 $result = $conn->query($sql);
 
 // Inicializa um array para armazenar os dados

@@ -118,7 +118,7 @@
                         cardList.innerHTML = ''; // Limpa a lista existente
                         data.forEach(card => {
                             const li = document.createElement('li');
-                            li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
+                            li.innerHTML = `${card.id}: ${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
                             cardList.appendChild(li);
                         });
                     } catch (error) {
@@ -134,6 +134,7 @@
 
         // Função para excluir um cartão
         function deleteCard(id) {
+            console.log("ola " + id);
     if (confirm('Tem certeza de que deseja excluir este cartão?')) {
         fetch('delete_card.php', {
             method: 'POST',
@@ -144,33 +145,34 @@
                 'id': id
             })
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erro na resposta do servidor: ' + response.statusText);
-            }
-            return response.text(); // Recebe a resposta como texto para depuração
-        })
-        .then(text => {
-            console.log('Texto recebido do servidor:', text); // Log da resposta
-            try {
-                const data = JSON.parse(text); // Tenta parsear como JSON
-                if (data.status === 'success') {
-                    alert(data.message);
-                    loadCards(); // Recarrega a lista de cartões
-                } else {
-                    alert(data.message);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na resposta do servidor: ' + response.statusText);
                 }
-            } catch (error) {
-                console.error('Erro de parsing JSON:', error);
-                alert('Resposta do servidor não é JSON válido.');
-            }
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            alert('Erro ao excluir o cartão.');
-        });
+                return response.text(); // Recebe a resposta como texto para depuração
+            })
+            .then(text => {
+                console.log('Texto recebido do servidor:', text); // Log da resposta
+                try {
+                    const data = JSON.parse(text); // Tenta parsear como JSON
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        loadCards(); // Recarrega a lista de cartões
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (error) {
+                    console.error('Erro de parsing JSON:', error);
+                    alert('Resposta do servidor não é JSON válido.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao excluir o cartão.');
+            });
     }
 }
+
         // Carregar cartões ao abrir a página
         window.addEventListener('load', loadCards);
 
