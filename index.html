@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,5 +19,37 @@
         </div>
     </div>
     <div class="inferior">
+        <br>
+        <br>
         <a href="indexLogin.html">Admin</a>
     </div>
+
+    <script>
+        function verificarTeclaEnter(event) {
+            if (event.key === "Enter") {
+                const codigoAluno = document.getElementById("codigoAluno").value;
+                
+                // Envia o código para o backend usando fetch API
+                fetch('backindex.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ codigo: codigoAluno })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.existe) {
+                        document.getElementById("nomeAluno").innerText = data.nome;
+                    } else {
+                        document.getElementById("nomeAluno").innerText = "Código não encontrado!";
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
