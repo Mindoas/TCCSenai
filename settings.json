@@ -1,0 +1,7 @@
+{
+    "files.autoSave": "afterDelay",
+    "remoteHub.commitDirectlyWarning": "off",
+    "git.enableSmartCommit": true,
+    "git.autofetch": true,
+    "php.validate.executablePath": "C:/php/php.exe"
+}
