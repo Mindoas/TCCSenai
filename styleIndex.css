@@ -10,8 +10,8 @@ body {
 
 .container {
     background-color: white;
-    width: 70%;
-    height: 650px;
+    width: 75%;
+    height: 600px;
     margin: 0 auto;
     display: flex;
     justify-content: center; /* Distribui os elementos .esquerda e .direita horizontalmente */
@@ -90,7 +90,7 @@ input {
 
 .logo{
     text-align: center;
-    padding: 30px;
+    padding: 20px;
 }
 
 .slc_arq{
