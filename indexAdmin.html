@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -82,25 +81,19 @@
             const formData = new FormData(form);
 
             // Enviando dados via AJAX
-            fetch('save_card.php', {
+            fetch('seu_script_php.php', {
                 method: 'POST',
                 body: formData
             })
-                .then(response => response.text()) // Recebe como texto para depuração
-                .then(text => {
-                    try {
-                        const data = JSON.parse(text); // Tenta parsear como JSON
-                        if (data.status === 'success') {
-                            alert(data.message);
-                            popup.style.display = 'none'; // Fecha o pop-up
-                            form.reset(); // Reseta o formulário
-                            loadCards(); // Recarrega a lista de cartões
-                        } else {
-                            alert(data.message);
-                        }
-                    } catch (error) {
-                        console.error('Erro de parsing JSON:', error);
-                        alert('Resposta do servidor não é JSON válido.');
+                .then(response => response.json()) // Recebe como JSON
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        popup.style.display = 'none'; // Fecha o pop-up
+                        form.reset(); // Reseta o formulário
+                        loadCards(); // Recarrega a lista de cartões
+                    } else {
+                        alert(data.message);
                     }
                 })
                 .catch(error => {
@@ -111,21 +104,15 @@
 
         // Função para carregar e exibir os cartões
         function loadCards() {
-            fetch('get_cards.php')
-                .then(response => response.text()) // Recebe como texto para depuração
-                .then(text => {
-                    try {
-                        const data = JSON.parse(text); // Tenta parsear como JSON
-                        cardList.innerHTML = ''; // Limpa a lista existente
-                        data.forEach(card => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
-                            cardList.appendChild(li);
-                        });
-                    } catch (error) {
-                        console.error('Erro de parsing JSON:', error);
-                        alert('Resposta do servidor não é JSON válido.');
-                    }
+            fetch('seu_script_php.php')
+                .then(response => response.json()) // Recebe como JSON
+                .then(data => {
+                    cardList.innerHTML = ''; // Limpa a lista existente
+                    data.forEach(card => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
+                        cardList.appendChild(li);
+                    });
                 })
                 .catch(error => {
                     console.error('Erro:', error);
@@ -136,7 +123,7 @@
         // Função para excluir um cartão
         function deleteCard(id) {
             if (confirm('Tem certeza de que deseja excluir este cartão?')) {
-                fetch('delete_card.php', {
+                fetch('seu_script_php.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
@@ -145,25 +132,13 @@
                         'id': id
                     })
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erro na resposta do servidor: ' + response.statusText);
-                        }
-                        return response.text(); // Recebe a resposta como texto para depuração
-                    })
-                    .then(text => {
-                        console.log('Texto recebido do servidor:', text); // Log da resposta
-                        try {
-                            const data = JSON.parse(text); // Tenta parsear como JSON
-                            if (data.status === 'success') {
-                                alert(data.message);
-                                loadCards(); // Recarrega a lista de cartões
-                            } else {
-                                alert(data.message);
-                            }
-                        } catch (error) {
-                            console.error('Erro de parsing JSON:', error);
-                            alert('Resposta do servidor não é JSON válido.');
+                    .then(response => response.json()) // Recebe como JSON
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert(data.message);
+                            loadCards(); // Recarrega a lista de cartões
+                        } else {
+                            alert(data.message);
                         }
                     })
                     .catch(error => {
@@ -182,4 +157,3 @@
 </body>
 
 </html>
-
