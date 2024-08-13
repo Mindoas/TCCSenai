@@ -25,15 +25,15 @@
             <button class="add" id="open-popup">Adicionar Cartão</button>
             <button class="view" id="view-cards">Ver Cadastros</button>
         </div>
-        <div class="card-list">
+        <!-- <div class="card-list">
             <h2>Lista de Cartões</h2>
             <ul id="card-list">
-                <!-- Lista de cartões será inserida aqui -->
+                 Lista de cartões será inserida aqui 
             </ul>
-        </div>
+        </div> -->
     </div>
 
-    <!-- O Pop-Up -->
+    <!-- O Pop-Up de Adicionar Cartão -->
     <div id="popup" class="popup">
         <div class="popup-content">
             <span class="close-btn">&times;</span>
@@ -48,34 +48,48 @@
         </div>
     </div>
 
+    <!-- Novo Pop-Up para Ver Cartões -->
+    <div id="view-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" id="close-view-popup">&times;</span>
+            <h2>Lista de Cartões</h2>
+            <ul id="view-card-list">
+                <!-- Lista de cartões será inserida aqui -->
+            </ul>
+        </div>
+    </div>
+
     <script>
         // Selecionar elementos
         const openPopupButton = document.getElementById('open-popup');
         const popup = document.getElementById('popup');
-        const closePopupButton = document.querySelector('.close-btn');
+        const closePopupButton = document.querySelector('.popup .close-btn');
         const form = document.getElementById('card-form');
         const viewCardsButton = document.getElementById('view-cards');
         const cardList = document.getElementById('card-list');
+        const viewPopup = document.getElementById('view-popup');
+        const closeViewPopupButton = document.getElementById('close-view-popup');
+        const viewCardList = document.getElementById('view-card-list');
 
-        // Função para abrir o pop-up
+        // Função para abrir o pop-up de adicionar cartão
         openPopupButton.addEventListener('click', () => {
             popup.style.display = 'block';
         });
 
-        // Função para fechar o pop-up
+        // Função para fechar o pop-up de adicionar cartão
         closePopupButton.addEventListener('click', () => {
             popup.style.display = 'none';
         });
 
-        // Fechar o pop-up quando clicar fora do conteúdo
+        // Fechar o pop-up de adicionar cartão quando clicar fora do conteúdo
         window.addEventListener('click', (event) => {
             if (event.target === popup) {
                 popup.style.display = 'none';
             }
         });
 
-        // Manipulador de envio do formulário
-        form.addEventListener('submit', (event) => {
+       // Manipulador de envio do formulário de adicionar cartão
+       form.addEventListener('submit', (event) => {
             event.preventDefault(); // Impede o envio padrão do formulário
 
             // Obtendo dados do formulário
@@ -92,7 +106,7 @@
                         const data = JSON.parse(text); // Tenta parsear como JSON
                         if (data.status === 'success') {
                             alert(data.message);
-                            popup.style.display = 'none'; // Fecha o pop-up
+                            popupAddCard.style.display = 'none'; // Fecha o pop-up
                             form.reset(); // Reseta o formulário
                             loadCards(); // Recarrega a lista de cartões
                         } else {
@@ -100,7 +114,7 @@
                         }
                     } catch (error) {
                         console.error('Erro de parsing JSON:', error);
-                        alert('Resposta do servidor não é JSON válido.');
+                        // alert('Resposta do servidor não é JSON válido.');
                     }
                 })
                 .catch(error => {
@@ -108,24 +122,18 @@
                     alert('Erro ao salvar o cartão.');
                 });
         });
-
-        // Função para carregar e exibir os cartões
+        // Função para carregar e exibir os cartões na lista principal
         function loadCards() {
             fetch('get_cards.php')
-                .then(response => response.text()) // Recebe como texto para depuração
-                .then(text => {
-                    try {
-                        const data = JSON.parse(text); // Tenta parsear como JSON
-                        cardList.innerHTML = ''; // Limpa a lista existente
-                        data.forEach(card => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
-                            cardList.appendChild(li);
-                        });
-                    } catch (error) {
-                        console.error('Erro de parsing JSON:', error);
-                        alert('Resposta do servidor não é JSON válido.');
-                    }
+                .then(response => response.json()) // Recebe como JSON diretamente
+                .then(data => {
+                    cardList.innerHTML = ''; // Limpa a lista existente
+                    data.forEach(card => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" data-id="${card.id}">Excluir</button>`;
+                        cardList.appendChild(li);
+                    });
+                    addDeleteButtonListeners(); // Adiciona ouvintes de eventos aos botões de exclusão
                 })
                 .catch(error => {
                     console.error('Erro:', error);
@@ -133,52 +141,97 @@
                 });
         }
 
+        // Função para adicionar ouvintes de eventos aos botões de exclusão
+        function addDeleteButtonListeners() {
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    deleteCard(button.getAttribute('data-id'));
+                });
+            });
+        }
+
+        // Função para abrir o pop-up de visualização de cartões
+        viewCardsButton.addEventListener('click', () => {
+            fetch('get_cards.php')
+                .then(response => response.json()) // Recebe como JSON diretamente
+                .then(data => {
+                    viewCardList.innerHTML = ''; // Limpa a lista existente no pop-up
+                    data.forEach(card => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" data-id="${card.id}">Excluir</button>`;
+                        viewCardList.appendChild(li);
+                    });
+                    addViewPopupDeleteButtonListeners(); // Adiciona ouvintes de eventos aos botões de exclusão no pop-up
+                    viewPopup.style.display = 'block'; // Abre o pop-up de visualização
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao carregar os cartões.');
+                });
+        });
+
+        // Função para adicionar ouvintes de eventos aos botões de exclusão no pop-up de visualização
+        function addViewPopupDeleteButtonListeners() {
+            document.querySelectorAll('#view-card-list .delete-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    deleteCard(button.getAttribute('data-id'));
+                });
+            });
+        }
+
+        // Função para fechar o pop-up de visualização de cartões
+        closeViewPopupButton.addEventListener('click', () => {
+            viewPopup.style.display = 'none';
+        });
+
+        // Fechar o pop-up de visualização de cartões quando clicar fora do conteúdo
+        window.addEventListener('click', (event) => {
+            if (event.target === viewPopup) {
+                viewPopup.style.display = 'none';
+            }
+        });
+
         // Função para excluir um cartão
         function deleteCard(id) {
-            console.log("ola " + id);
-    if (confirm('Tem certeza de que deseja excluir este cartão?')) {
-        fetch('delete_card.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                'id': id
-            })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro na resposta do servidor: ' + response.statusText);
-                }
-                return response.text(); // Recebe a resposta como texto para depuração
-            })
-            .then(text => {
-                console.log('Texto recebido do servidor:', text); // Log da resposta
-                try {
-                    const data = JSON.parse(text); // Tenta parsear como JSON
-                    if (data.status === 'success') {
-                        alert(data.message);
-                        loadCards(); // Recarrega a lista de cartões
-                    } else {
-                        alert(data.message);
-                    }
-                } catch (error) {
-                    console.error('Erro de parsing JSON:', error);
-                    alert('Resposta do servidor não é JSON válido.');
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao excluir o cartão.');
-            });
-    }
-}
+            if (confirm('Tem certeza de que deseja excluir este cartão?')) {
+                fetch('delete_card.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        'id': id
+                    })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro na resposta do servidor: ' + response.statusText);
+                        }
+                        return response.text(); // Recebe a resposta como texto para depuração
+                    })
+                    .then(text => {
+                        try {
+                            const data = JSON.parse(text); // Tenta parsear como JSON
+                            if (data.status === 'success') {
+                                alert(data.message);
+                                loadCards(); // Recarrega a lista de cartões
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (error) {
+                            console.error('Erro de parsing JSON:', error);
+                            alert('Resposta do servidor não é JSON válido.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Erro ao excluir o cartão.');
+                    });
+            }
+        }
 
         // Carregar cartões ao abrir a página
         window.addEventListener('load', loadCards);
-
-        // Recarregar a lista de cartões quando o botão "Ver Cadastros" for clicado
-        viewCardsButton.addEventListener('click', loadCards);
     </script>
 </body>
 
