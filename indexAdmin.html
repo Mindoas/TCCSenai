@@ -119,7 +119,7 @@
                         cardList.innerHTML = ''; // Limpa a lista existente
                         data.forEach(card => {
                             const li = document.createElement('li');
-                            li.innerHTML = `${card.id}: ${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
+                            li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
                             cardList.appendChild(li);
                         });
                     } catch (error) {
