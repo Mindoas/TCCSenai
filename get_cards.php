@@ -14,9 +14,35 @@ if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }
 
-// Consulta SQL para obter os dados
-$sql = "SELECT id,nome, info FROM cartoes";
-$result = $conn->query($sql);
+// Obtém o parâmetro de pesquisa
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+
+// Prepara a consulta SQL com filtro de pesquisa
+$sql = "SELECT id, nome, info FROM cartoes";
+$params = [];
+$types = '';
+
+// Adiciona cláusula WHERE se houver um termo de pesquisa
+if ($search !== '') {
+    $sql .= " WHERE nome LIKE ? OR info LIKE ?";
+    $searchTerm = "%$search%";
+    $params = [$searchTerm, $searchTerm];
+    $types = 'ss'; // 'ss' para string e string
+}
+
+// Prepara a consulta
+$stmt = $conn->prepare($sql);
+
+// Se houver parâmetros, vincula-os
+if ($params) {
+    $stmt->bind_param($types, ...$params);
+}
+
+// Executa a consulta
+$stmt->execute();
+
+// Obtém o resultado
+$result = $stmt->get_result();
 
 // Inicializa um array para armazenar os dados
 $cards = [];
@@ -32,5 +58,6 @@ if ($result->num_rows > 0) {
 echo json_encode($cards);
 
 // Fecha a conexão
+$stmt->close();
 $conn->close();
 ?>

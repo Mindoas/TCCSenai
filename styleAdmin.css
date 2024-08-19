@@ -125,6 +125,8 @@ body {
     z-index: 1000; /* Ficar sobre outros elementos */
 }
 
+/* Adicione ao seu arquivo styleAdmin.css */
+
 .popup-content {
     position: absolute;
     top: 50%;
@@ -133,7 +135,9 @@ body {
     background: #fff;
     padding: 20px;
     border-radius: 5px;
-    width: 300px;
+    width: 600px;
+    height: 80vh; /* Altura máxima do pop-up */
+    overflow-y: auto; /* Adicionar barra de rolagem vertical se necessário */
     text-align: center;
 }
 
@@ -141,9 +145,12 @@ body {
     position: absolute;
     top: 10px;
     right: 10px;
-    font-size: 20px;
+    font-size: 24px;
     cursor: pointer;
+    color: #333;
 }
+
+
 
 /* Adicionar estilo ao formulário */
 #card-form {
@@ -216,4 +223,78 @@ body {
 
 .card-list button:hover {
     background-color: #d32f2f;
+}
+
+
+
+
+.popup-content h2 {
+    margin-top: 0;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+#view-card-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#view-card-list li {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd; /* Borda leve */
+    border-radius: 4px; /* Cantos arredondados */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9; /* Fundo claro para itens */
+}
+
+#view-card-list li button {
+    background-color: #e74c3c; /* Cor de fundo do botão */
+    color: #fff; /* Cor do texto do botão */
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#view-card-list li button:hover {
+    background-color: #c0392b; /* Cor de fundo ao passar o mouse */
+}
+
+/* Adicione ao seu arquivo styleAdmin.css */
+
+.search-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#search-input {
+    width: calc(100% - 120px);
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+#search-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+#search-button:hover {
+    background-color: #0056b3;
 }

@@ -1,0 +1,29 @@
+{
+    // Use o IntelliSense para saber mais sobre os atributos possíveis.
+    // Focalizar para exibir as descrições dos atributos existentes.
+    // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Open index.html",
+            "file": "c:\\xampp\\htdocs\\TCCSenai\\index.html"
+        },
+        {
+            "type": "php",
+            "request": "launch",
+            "name": "Listen for Xdebug",
+            "port": 9003, // Porta padrão para Xdebug 3
+            "pathMappings": {
+                "/var/www/html": "${workspaceRoot}" // Mapeia o caminho do servidor para o caminho local
+            },
+            "log": true, // Habilita o log para depuração
+            "xdebugSettings": {
+                "max_children": 100,
+                "max_data": 512,
+                "max_depth": 3
+            }
+        }
+    ]
+}

@@ -5,18 +5,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Administração</title>
+    
     <link rel="stylesheet" href="styleAdmin.css">
 </head>
-
 <body>
     <div class="sidebar">
         <div class="title">
             <h1>Painel Administrador</h1>
         </div>
         <div class="blank-space">
-            <!-- Nomes dos alunos já presentes -->
+            
+    <div class="container">
+            <ul id="listaNomes"></ul> <!-- Adicione a lista de nomes aqui -->
+            <button id="apagarListaBtn">Apagar Lista</button>
+    </div>
         </div>
     </div>
+    <script>
+         document.addEventListener('DOMContentLoaded', () => {
+            fetch('getNames.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const listaNomes = document.getElementById("listaNomes");
+                        listaNomes.innerHTML = ""; // Limpa a lista existente
+                        data.nomes.forEach(nome => {
+                            const li = document.createElement("li");
+                            li.textContent = nome;
+                            listaNomes.appendChild(li);
+                        });
+                    } else {
+                        console.error('Erro ao obter nomes.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+        });
+
+
+
+
+        let nomesArmazenados = []; // Inicialize a variável
+
+function verificarTeclaEnter(event) {
+    if (event.key === "Enter") {
+        const codigoAluno = document.getElementById("codigoAluno").value;                
+        fetch('backindex.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ codigo: codigoAluno })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.existe) {
+                document.getElementById("nomeAluno").innerText = data.nome;
+                nomesArmazenados.push(data.nome);
+                localStorage.setItem('nomes', JSON.stringify(nomesArmazenados));
+                atualizarListaNomes();
+            } else {
+                document.getElementById("nomeAluno").innerText = "Código não encontrado!";
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+        });
+    }
+}
+
+// Função para atualizar a lista de nomes
+function atualizarListaNomes() {
+    const listaNomes = document.getElementById("listaNomes");
+    listaNomes.innerHTML = ""; // Limpa a lista
+    nomesArmazenados.forEach(nome => {
+        const li = document.createElement("li");
+        li.textContent = nome;
+        listaNomes.appendChild(li);
+    });
+}
+
+// Função para apagar a lista e limpar o localStorage
+function apagarLista() {
+    const listaNomes = document.getElementById("listaNomes");
+    while (listaNomes.firstChild) {
+        listaNomes.removeChild(listaNomes.firstChild);
+    }
+    nomesArmazenados = []; // Limpa o array de nomes
+    localStorage.removeItem('nomes'); // Remove o item do localStorage
+}
+
+// Adiciona o event listener ao botão
+const apagarListaBtn = document.getElementById('apagarListaBtn');
+apagarListaBtn.addEventListener('click', apagarLista);
+
+// Atualiza a lista ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    const armazenados = localStorage.getItem('nomes');
+    if (armazenados) {
+        nomesArmazenados = JSON.parse(armazenados);
+        atualizarListaNomes();
+    }
+});
+    </script>
     <div class="content">
         <div class="options">
             <h2>OPÇÕES</h2>
@@ -24,12 +116,7 @@
             <button class="add" id="open-popup">Adicionar Cartão</button>
             <button class="view" id="view-cards">Ver Cadastros</button>
         </div>
-        <div class="card-list">
-           
-            <ul id="card-list">
-                <!-- Lista de cartões será inserida aqui -->
-            </ul>
-        </div>
+        
     </div>
 
     <!-- O Pop-Up de Adicionar Cartão -->
@@ -48,15 +135,19 @@
     </div>
 
     <!-- O Pop-Up de Ver Cartões -->
-    <div id="popup-view-cards" class="popup">
-        <div class="popup-content">
-            <span class="close-btn" id="close-view-cards">&times;</span>
-            <h2>Lista de Cartões</h2>
-            <ul id="view-card-list">
-                <!-- Lista de cartões será inserida aqui -->
-            </ul>
+<div id="popup-view-cards" class="popup">
+    <div class="popup-content">
+        <span class="close-btn" id="close-view-cards">&times;</span>
+        <h2>Lista de Cartões</h2>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Pesquisar por nome ou código...">
+            <button id="search-button">Buscar</button>
         </div>
+        <ul id="view-card-list">
+            <!-- Lista de cartões será inserida aqui -->
+        </ul>
     </div>
+</div>
 
     <script>
         // Selecionar elementos para o pop-up de adicionar cartão
@@ -64,34 +155,36 @@
         const popupAddCard = document.getElementById('popup-add-card');
         const closeAddCardPopup = document.getElementById('close-add-card');
         const form = document.getElementById('card-form');
-
+    
         // Selecionar elementos para o pop-up de ver cartões
         const viewCardsButton = document.getElementById('view-cards');
         const popupViewCards = document.getElementById('popup-view-cards');
         const closeViewCardsPopup = document.getElementById('close-view-cards');
         const viewCardList = document.getElementById('view-card-list');
-
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+    
         // Função para abrir o pop-up de adicionar cartão
         openAddCardPopup.addEventListener('click', () => {
             popupAddCard.style.display = 'block';
         });
-
+    
         // Função para fechar o pop-up de adicionar cartão
         closeAddCardPopup.addEventListener('click', () => {
             popupAddCard.style.display = 'none';
         });
-
+    
         // Função para abrir o pop-up de ver cartões
         viewCardsButton.addEventListener('click', () => {
             popupViewCards.style.display = 'block';
             loadCardList(); // Carregar cartões ao abrir o pop-up
         });
-
+    
         // Função para fechar o pop-up de ver cartões
         closeViewCardsPopup.addEventListener('click', () => {
             popupViewCards.style.display = 'none';
         });
-
+    
         // Fechar o pop-up quando clicar fora do conteúdo
         window.addEventListener('click', (event) => {
             if (event.target === popupAddCard) {
@@ -101,14 +194,14 @@
                 popupViewCards.style.display = 'none';
             }
         });
-
+    
         // Manipulador de envio do formulário de adicionar cartão
         form.addEventListener('submit', (event) => {
             event.preventDefault(); // Impede o envio padrão do formulário
-
+    
             // Obtendo dados do formulário
             const formData = new FormData(form);
-
+    
             // Enviando dados via AJAX
             fetch('save_card.php', {
                 method: 'POST',
@@ -127,8 +220,7 @@
                             alert(data.message);
                         }
                     } catch (error) {
-                        // console.error('Erro de parsing JSON:', error);
-                        // alert('Resposta do servidor não é JSON válido.');
+                        console.error('Erro de parsing JSON:', error);
                     }
                 })
                 .catch(error => {
@@ -136,7 +228,7 @@
                     alert('Erro ao salvar o cartão.');
                 });
         });
-
+    
         // Função para carregar e exibir os cartões na lista principal
         function loadCards() {
             fetch('get_cards.php')
@@ -144,6 +236,7 @@
                 .then(text => {
                     try {
                         const data = JSON.parse(text); // Tenta parsear como JSON
+                        const cardList = document.getElementById('card-list');
                         cardList.innerHTML = ''; // Limpa a lista existente
                         data.forEach(card => {
                             const li = document.createElement('li');
@@ -151,19 +244,18 @@
                             cardList.appendChild(li);
                         });
                     } catch (error) {
-                        // console.error('Erro de parsing JSON:', error);
-                        // alert('Resposta do servidor não é JSON válido.');
+                        console.error('Erro de parsing JSON:', error);
                     }
                 })
                 .catch(error => {
-                    // console.error('Erro:', error);
-                    // alert('Erro ao carregar os cartões.');
+                    console.error('Erro:', error);
+                    alert('Erro ao carregar os cartões.');
                 });
         }
-
+    
         // Função para carregar e exibir os cartões na lista de ver cartões
-        function loadCardList() {
-            fetch('get_cards.php')
+        function loadCardList(searchTerm = '') {
+            fetch('get_cards.php?search=' + encodeURIComponent(searchTerm))
                 .then(response => response.text()) // Recebe como texto para depuração
                 .then(text => {
                     try {
@@ -176,7 +268,6 @@
                         });
                     } catch (error) {
                         console.error('Erro de parsing JSON:', error);
-                        alert('Resposta do servidor não é JSON válido.');
                     }
                 })
                 .catch(error => {
@@ -184,7 +275,7 @@
                     alert('Erro ao carregar os cartões.');
                 });
         }
-
+    
         // Função para excluir um cartão
         function deleteCard(id) {
             if (confirm('Tem certeza de que deseja excluir este cartão?')) {
@@ -214,20 +305,27 @@
                                 alert(data.message);
                             }
                         } catch (error) {
-                            // console.error('Erro de parsing JSON:', error);
-                            // alert('Resposta do servidor não é JSON válido.');
+                            console.error('Erro de parsing JSON:', error);
+                    
                         }
                     })
                     .catch(error => {
-                        // console.error('Erro:', error);
-                        // alert('Erro ao excluir o cartão.');
+                        console.error('Erro:', error);
+                        alert('Erro ao excluir o cartão.');
                     });
             }
         }
-
+    
+        // Manipulador do botão de pesquisa
+        searchButton.addEventListener('click', () => {
+            const searchTerm = searchInput.value.trim();
+            loadCardList(searchTerm); // Carregar cartões filtrados com base na pesquisa
+        });
+    
         // Carregar cartões ao abrir a página
         window.addEventListener('load', loadCards);
     </script>
+    
 </body>
 
 </html>

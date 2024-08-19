@@ -136,3 +136,9 @@ img{
     color: rgb(0, 0, 0);
     background-color: red;
 }
+
+
+.clock{
+    color: #333;
+    font-size: 80px;
+}

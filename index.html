@@ -11,7 +11,10 @@
     <div class="container">
         <div class="esquerda">
             <div class="centro">
-                <img src="avatar.png" alt="avatar">
+                <div id="clock" class="clock">horas</div>
+                <div class="avatar-container">
+                    <img src="avatar.png" alt="avatar">
+                </div>
                 <p id="cardtext">Aproxime o Cartão</p>
                 <input type="text" id="codigoAluno" onkeypress="verificarTeclaEnter(event)">
                 <p class="aluno_baixo" id="nomeAluno"></p>
@@ -22,33 +25,92 @@
         <br>
         <a href="indexLogin.html" id="login">Admin</a>
     </div>
-
     <script>
-        function verificarTeclaEnter(event) {
-            if (event.key === "Enter") {
-                const codigoAluno = document.getElementById("codigoAluno").value;
-                
-                // Envia o código para o backend usando fetch API
-                fetch('backindex.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ codigo: codigoAluno })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.existe) {
-                        document.getElementById("nomeAluno").innerText = data.nome;
-                    } else {
-                        document.getElementById("nomeAluno").innerText = "Código não encontrado!";
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
-            }
+
+function atualizarHorario() {
+            const agora = new Date();
+            const horas = String(agora.getHours()).padStart(2, '0');
+            const minutos = String(agora.getMinutes()).padStart(2, '0');
+            const segundos = String(agora.getSeconds()).padStart(2, '0');
+            const horario = `${horas}:${minutos}:${segundos}`;
+            document.getElementById('clock').innerText = horario;
         }
+
+        // Atualiza a hora a cada segundo
+        setInterval(atualizarHorario, 1000);
+
+        // Atualiza o horário ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            atualizarHorario();
+        });
+
+        
+        let nomesArmazenados = []; // Inicialize a variável
+
+function verificarTeclaEnter(event) {
+    if (event.key === "Enter") {
+        const codigoAluno = document.getElementById("codigoAluno").value;                
+        fetch('backindex.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ codigo: codigoAluno })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.existe) {
+                document.getElementById("nomeAluno").innerText = data.nome;
+                nomesArmazenados.push(data.nome);
+                localStorage.setItem('nomes', JSON.stringify(nomesArmazenados));
+                atualizarListaNomes();
+            } else {
+                document.getElementById("nomeAluno").innerText = "Código não encontrado!";
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+        });
+    }
+}
+
+// Função para atualizar a lista de nomes
+function atualizarListaNomes() {
+    const listaNomes = document.getElementById("listaNomes");
+    listaNomes.innerHTML = ""; // Limpa a lista
+    nomesArmazenados.forEach(nome => {
+        const li = document.createElement("li");
+        li.textContent = nome;
+        listaNomes.appendChild(li);
+    });
+}
+
+// Função para apagar a lista e limpar o localStorage
+function apagarLista() {
+    const listaNomes = document.getElementById("listaNomes");
+    while (listaNomes.firstChild) {
+        listaNomes.removeChild(listaNomes.firstChild);
+    }
+    nomesArmazenados = []; // Limpa o array de nomes
+    localStorage.removeItem('nomes'); // Remove o item do localStorage
+}
+
+// Adiciona o event listener ao botão
+const apagarListaBtn = document.getElementById('apagarListaBtn');
+apagarListaBtn.addEventListener('click', apagarLista);
+
+// Atualiza a lista ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    const armazenados = localStorage.getItem('nomes');
+    if (armazenados) {
+        nomesArmazenados = JSON.parse(armazenados);
+        atualizarListaNomes();
+    }
+    atualizarHorario(); // Atualiza o horário ao carregar a página
+    setInterval(atualizarHorario, 1000); // Atualiza o horário a cada segundo
+});
+
+
     </script>
 </body>
 </html>
