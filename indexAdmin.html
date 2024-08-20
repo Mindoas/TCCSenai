@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Administração</title>
-    
     <link rel="stylesheet" href="styleAdmin.css">
 </head>
 <body>
@@ -15,12 +14,122 @@
         </div>
         <div class="blank-space">
             
-    <div class="container">
-            <ul id="listaNomes"></ul> <!-- Adicione a lista de nomes aqui -->
-            <button id="apagarListaBtn">Apagar Lista</button>
-    </div>
+            <div class="container">
+                <div class="table-header">
+                    <div class="table-cell">NOME</div>
+                    <div class="table-cell">SÉRIE</div>
+                    <div class="table-cell">HORÁRIO</div>
+                </div>
+                <ul id="listaNomes" class="table-body">
+                    <!-- Itens da lista serão adicionados aqui -->
+                </ul>
+            </div>
+            
         </div>
     </div>
+    <div class="content">
+        <div class="options">
+            <h2>OPÇÕES</h2>
+            <button class="back-button" onclick="location.href='index.html'">Voltar ao Inicio</button>
+            <button class="add" id="open-popup">Adicionar Cartão</button>
+            <button class="view" id="view-cards">Ver Cadastros</button>
+            <button class="impr" id="apagarListaBtn">Imprimir Relatorio</button>
+        </div>
+        <div class="central">
+            <div class="carousel">
+                <div class="carousel-container">
+                    <div class="carousel-slide">
+                        <a href="https://www.sesisp.org.br/noticia/sesi-sp-oferece-bolsas-integrais-a-alunos-nas-melhores-universidades-do-mundo">
+                            <img src="https://cronos-media.sesisenaisp.org.br/api/media/1-0/files?img=img_65_240808_6ed6a63f-cdda-41a0-9056-3c7063c68817_o.jpg&tipo=p" alt="Notícia SESI-SP">
+                            <p>SESI-SP oferece bolsas integrais a alunos nas melhores universidades do mundo</p>
+                        </a>
+                    </div>
+                    <div class="carousel-slide">
+                        <a href="https://www.sesisp.org.br/noticia/sesi-araraquara-basquete-conquista-o-bicampeonato-da-lbf-caixa-e-mantem-sequencia-de-titulos">
+                            <img src="https://cronos-media.sesisenaisp.org.br/api/media/1-0/files?img=img_64_240724_050c4a6e-1296-46f7-b243-1e8d36098404_o.jpeg&tipo=p" alt="Notícia SESI-SP">
+                            <p>SESI Araraquara basquete conquista o bicampeonato da LBF caixa e mantém sequência de títulos</p>
+                        </a>
+                    </div>
+                    <div class="carousel-slide">
+                        <a href="https://www.sesisp.org.br/noticia/outra-vez-no-topo-sesi-franca-basquete-e-tricampeao-do-nbb-2023/24">
+                            <img src="https://cronos-media.sesisenaisp.org.br/api/media/1-0/files?img=img_64_240614_1d31955a-450b-4fea-a8cb-04b914bedbe7_o.jpg&tipo=p" alt="Notícia SESI-SP">
+                            <p>Outra vez no topo: Sesi Franca Basquete é tricampeão do NBB 2023/24</p>
+                        </a>
+                    </div>
+                    <div class="carousel-slide">
+                        <a href="https://www.sesisp.org.br/noticia/a-incrivel-viagem-do-quintal">
+                            <img src="https://cronos-media.sesisenaisp.org.br/api/media/1-0/files?img=img_66_240807_e2d9f6d1-a921-4dde-8a2f-d31663bf3493_o.avif" alt="Notícia SESI-SP">
+                            <p>Sucesso na TV, programa Quintal da Cultura vira musical encenado no Teatro do SESI-SP</p>
+                        </a>
+                    </div>
+                    <div class="carousel-slide">
+                        <a href="https://www.sesisp.org.br/noticia/ao-vivo-dentro-da-cabeca-de-alguem">
+                            <img src="https://cronos-media.sesisenaisp.org.br/api/media/1-0/files?img=img_66_240813_33bd7b4e-da0f-4b1c-a6e4-d824188b9390_o.avif" alt="Notícia SESI-SP">
+                            <p>Companhia brasileira de teatro estreia sua nova peça no Teatro do SESI-SP
+                            </p>
+                        </a>
+                    </div>
+                    
+                </div>
+                <button class="carousel-button prev" onclick="prevSlide()">&#10094;</button>
+                <button class="carousel-button next" onclick="nextSlide()">&#10095;</button>
+            </div>
+            
+        </div>
+        <div id="clock-container" class="digital-clock">
+            <span id="date"></span> <span id="clock"></span>
+        </div>
+    </div>
+
+    <!-- O Pop-Up de Adicionar Cartão -->
+    <div id="popup-add-card" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" id="close-add-card">&times;</span>
+            <h2>Adicionar Cartão</h2>
+            <form id="card-form">
+                <label for="card-name">NOME</label>
+                <input type="text" id="card-name" name="card-name" required><br>
+                
+                <label for="card-info">ID</label>
+                <input type="text" id="card-info" name="card-info" required><br>
+                
+                <label for="card-serie">SERIE</label>
+                <select id="card-serie" name="card-serie" required>
+                    <option value="1EF">1º Ano EF</option>
+                    <option value="2EF">2º Ano EF</option>
+                    <option value="3EF">3º Ano EF</option>
+                    <option value="4EF">4º Ano EF</option>
+                    <option value="5EF">5º Ano EF</option>
+                    <option value="6EF">6º Ano EF</option>
+                    <option value="7EF">7º Ano EF</option>
+                    <option value="8EF">8º Ano EF</option>
+                    <option value="9EF">9º Ano EF</option>
+                    <option value="1EM">1º Ano EM</option>
+                    <option value="2EM">2º Ano EM</option>
+                    <option value="3EM">3º Ano EM</option>
+                </select><br>
+                
+                <button type="submit">Adicionar</button>
+            </form>
+        </div>
+    </div>
+    
+
+    <!-- O Pop-Up de Ver Cartões -->
+<div id="popup-view-cards" class="popup">
+    <div class="popup-content">
+        <span class="close-btn" id="close-view-cards">&times;</span>
+        <h2>Lista de Cartões</h2>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Pesquisar por nome ou código...">
+            <button id="search-button">Buscar</button>
+        </div>
+        <ul id="view-card-list">
+            <!-- Lista de cartões será inserida aqui -->
+        </ul>
+    </div>
+</div>
+
     <script>
          document.addEventListener('DOMContentLoaded', () => {
             fetch('getNames.php')
@@ -108,48 +217,9 @@ document.addEventListener('DOMContentLoaded', () => {
         atualizarListaNomes();
     }
 });
-    </script>
-    <div class="content">
-        <div class="options">
-            <h2>OPÇÕES</h2>
-            <button class="back-button" onclick="location.href='index.html'">Voltar ao Inicio</button>
-            <button class="add" id="open-popup">Adicionar Cartão</button>
-            <button class="view" id="view-cards">Ver Cadastros</button>
-        </div>
-        
-    </div>
 
-    <!-- O Pop-Up de Adicionar Cartão -->
-    <div id="popup-add-card" class="popup">
-        <div class="popup-content">
-            <span class="close-btn" id="close-add-card">&times;</span>
-            <h2>Adicionar Cartão</h2>
-            <form id="card-form">
-                <label for="card-name">Nome:</label>
-                <input type="text" id="card-name" name="card-name" required><br>
-                <label for="card-info">ID:</label>
-                <textarea id="card-info" name="card-info" required></textarea><br>
-                <button type="submit">Adicionar</button>
-            </form>
-        </div>
-    </div>
 
-    <!-- O Pop-Up de Ver Cartões -->
-<div id="popup-view-cards" class="popup">
-    <div class="popup-content">
-        <span class="close-btn" id="close-view-cards">&times;</span>
-        <h2>Lista de Cartões</h2>
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Pesquisar por nome ou código...">
-            <button id="search-button">Buscar</button>
-        </div>
-        <ul id="view-card-list">
-            <!-- Lista de cartões será inserida aqui -->
-        </ul>
-    </div>
-</div>
 
-    <script>
         // Selecionar elementos para o pop-up de adicionar cartão
         const openAddCardPopup = document.getElementById('open-popup');
         const popupAddCard = document.getElementById('popup-add-card');
@@ -324,6 +394,69 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Carregar cartões ao abrir a página
         window.addEventListener('load', loadCards);
+
+        function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const timeString = `${hours}:${minutes}:${seconds}`;
+    
+    document.getElementById('clock').textContent = timeString;
+
+    // Atualiza a data no formato numérico (dd/mm/yyyy)
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Mês começa do 0
+    const year = now.getFullYear();
+    const dateString = `${day}/${month}/${year}`;
+    
+    document.getElementById('date').textContent = dateString;
+}
+
+setInterval(updateClock, 1000); // Atualiza o relógio a cada segundo
+updateClock(); // Chama a função imediatamente ao carregar a página
+
+        let currentSlide = 0;
+
+function showSlide(index) {
+    const slides = document.querySelector('.carousel-container');
+    const totalSlides = document.querySelectorAll('.carousel-slide').length;
+
+    if (index >= totalSlides) {
+        currentSlide = 0;
+    } else if (index < 0) {
+        currentSlide = totalSlides - 1;
+    } else {
+        currentSlide = index;
+    }
+
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+}
+
+function nextSlide() {
+    showSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+    showSlide(currentSlide - 1);
+}
+
+// Optionally, you can add automatic slide transition
+setInterval(nextSlide, 8000);
+
+
+function adicionarNome(nome, serie, horario) {
+    const lista = document.getElementById('listaNomes');
+    
+    const item = document.createElement('li');
+    item.innerHTML = `
+        <div class="table-cell">${nome}</div>
+        <div class="table-cell">${serie}</div>
+        <div class="table-cell">${horario}</div>
+    `;
+    
+    lista.appendChild(item);
+}
     </script>
     
 </body>

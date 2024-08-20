@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #e8eaf6; /* Fundo suave azul claro */
     margin: 0;
     padding: 0;
     display: flex;
@@ -9,7 +9,7 @@ body {
 
 .sidebar {
     background-color: #ffffff;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,17 +25,17 @@ body {
 }
 
 .content .options {
-    background-color: #ffffff;
+    background-color: #fafafa; /* Fundo levemente acinzentado */
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin-bottom: 20px; /* Espaço entre as opções e a área de alertas */
+    margin-bottom: 20px;
 }
 
 .content .options h2 {
     margin-top: 0;
     font-size: 24px;
-    color: #333;
+    color: #444; /* Cor do texto mais suave */
 }
 
 .content .options button {
@@ -50,57 +50,62 @@ body {
 }
 
 .content .options button.add {
-    background-color: #4CAF50;
+    background-color: #81c784; /* Verde suave */
     color: white;
 }
 
 .content .options button.delete {
-    background-color: #f44336;
+    background-color: #e57373; /* Vermelho suave */
     color: white;
 }
 
 .content .options button.view {
-    background-color: #2b32f3;
+    background-color: #64b5f6; /* Azul suave */
     color: white;
 }
 
 .content .options button.back-button {
-    background-color: #d74af6;
+    background-color: #ba68c8; /* Roxo suave */
+    color: white;
+}
+
+.content .options button.impr {
+    background-color: #ffd54f; /* Amarelo suave */
     color: white;
 }
 
 .content .options button:hover {
-    opacity: 0.8;
+    opacity: 0.9; /* Leve alteração na opacidade ao passar o mouse */
 }
 
 .sidebar h1 {
     font-size: 24px;
-    color: #333;
+    color: #444; /* Texto da sidebar */
 }
 
 .alertas {
-    background-color: #ffffff;
+    background-color: #fafafa; /* Fundo levemente acinzentado */
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    color: #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #444;
     height: 500px;
     text-align: center;
     font-size: 30px;
 }
 
-.title{
+.title {
     text-align: center;
     font-size: 30px;
-    background-color: #f4584d;
+    background-color: #ff8a65; /* Cor de fundo suave para o título */
     width: 700px;
-    padding-bottom: 20px; /* Espaço para o botão */
+    padding-bottom: 20px;
 }
 
 .back-button {
-    background-color: #f0f0f0;
+    background-color: #e0e0e0;
     border: 1px solid #ccc;
     border-radius: 3px;
-    color: #333;
+    color: #444;
     cursor: pointer;
     font-size: 16px;
     margin-top: 10px;
@@ -109,35 +114,31 @@ body {
 }
 
 .back-button:hover {
-    background-color: #e0e0e0;
+    background-color: #d3d3d3;
 }
 
-
-
 .popup {
-    display: none; /* Esconder o pop-up por padrão */
-    position: fixed; /* Ficar fixo na tela */
+    display: none;
+    position: fixed;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
-    z-index: 1000; /* Ficar sobre outros elementos */
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
 }
-
-/* Adicione ao seu arquivo styleAdmin.css */
 
 .popup-content {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Centralizar o pop-up */
-    background: #fff;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
     padding: 20px;
     border-radius: 5px;
     width: 600px;
-    height: 80vh; /* Altura máxima do pop-up */
-    overflow-y: auto; /* Adicionar barra de rolagem vertical se necessário */
+    height: 80vh;
+    overflow-y: auto;
     text-align: center;
 }
 
@@ -147,12 +148,9 @@ body {
     right: 10px;
     font-size: 24px;
     cursor: pointer;
-    color: #333;
+    color: #444;
 }
 
-
-
-/* Adicionar estilo ao formulário */
 #card-form {
     display: flex;
     flex-direction: column;
@@ -169,27 +167,14 @@ body {
 #card-form button {
     padding: 10px;
     border: none;
-    background-color: #4CAF50;
+    background-color: #81c784; /* Verde suave */
     color: white;
     cursor: pointer;
     border-radius: 4px;
 }
 
 #card-form button:hover {
-    background-color: #45a049;
-}
-
-/* Estilo do Painel Administrativo */
-.content {
-    padding: 20px;
-}
-
-.options {
-    margin-bottom: 20px;
-}
-
-.options button {
-    margin-right: 10px;
+    background-color: #66bb6a; /* Verde um pouco mais escuro ao passar o mouse */
 }
 
 .card-list {
@@ -202,7 +187,7 @@ body {
 }
 
 .card-list li {
-    background: #f4f4f4;
+    background: #f9f9f9; /* Fundo claro */
     margin: 5px 0;
     padding: 10px;
     border-radius: 4px;
@@ -213,7 +198,7 @@ body {
 }
 
 .card-list button {
-    background-color: #f44336;
+    background-color: #e57373; /* Vermelho suave */
     color: white;
     border: none;
     padding: 5px 10px;
@@ -222,44 +207,27 @@ body {
 }
 
 .card-list button:hover {
-    background-color: #d32f2f;
+    background-color: #ef5350; /* Vermelho um pouco mais escuro ao passar o mouse */
 }
-
-
-
 
 .popup-content h2 {
     margin-top: 0;
 }
 
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
-    color: #333;
-}
-
-#view-card-list {
-    list-style-type: none;
-    padding: 0;
-}
-
 #view-card-list li {
     margin: 10px 0;
     padding: 10px;
-    border: 1px solid #ddd; /* Borda leve */
-    border-radius: 4px; /* Cantos arredondados */
+    border: 1px solid #ddd;
+    border-radius: 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #f9f9f9; /* Fundo claro para itens */
+    background-color: #f9f9f9;
 }
 
 #view-card-list li button {
-    background-color: #e74c3c; /* Cor de fundo do botão */
-    color: #fff; /* Cor do texto do botão */
+    background-color: #e57373;
+    color: #fff;
     border: none;
     border-radius: 4px;
     padding: 5px 10px;
@@ -268,10 +236,8 @@ body {
 }
 
 #view-card-list li button:hover {
-    background-color: #c0392b; /* Cor de fundo ao passar o mouse */
+    background-color: #ef5350;
 }
-
-/* Adicione ao seu arquivo styleAdmin.css */
 
 .search-container {
     margin-bottom: 20px;
@@ -290,11 +256,196 @@ body {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
-    background-color: #007bff;
+    background-color: #64b5f6; /* Azul suave */
     color: #fff;
     cursor: pointer;
 }
 
 #search-button:hover {
-    background-color: #0056b3;
+    background-color: #42a5f5; /* Azul um pouco mais escuro ao passar o mouse */
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #ffffff;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+    appearance: none; /* Remove a aparência padrão do seletor */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+select:focus {
+    border-color: #64b5f6; /* Cor de destaque quando o campo é focado */
+    box-shadow: 0 0 5px rgba(100, 181, 246, 0.5); /* Sombra ao focar */
+    outline: none;
+}
+
+
+#card-serie {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #ffffff;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#card-serie:focus {
+    border-color: #64b5f6; /* Cor de destaque quando o campo é focado */
+    box-shadow: 0 0 5px rgba(100, 181, 246, 0.5); /* Sombra ao focar */
+    outline: none;
+}
+
+
+.digital-clock {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 60px;
+    text-align: center;
+    color: #333;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 750px;
+    height: 100px;
+    margin: 20px auto; /* Centraliza o relógio e adiciona espaço ao redor */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#date {
+    font-size: 60px;
+    margin-right: 20px;
+}
+
+.carousel {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    height: 400px;
+}
+
+.carousel-container {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+    position: relative; /* Adicione esta linha para permitir o posicionamento absoluto dos elementos internos */
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    text-align: center;
+    background-color: #eaeaea;
+    border-right: 1px solid #ddd;
+    height: 400px;
+    overflow: hidden; /* Garante que o texto não saia do container */
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garante que a imagem cubra o container sem distorção */
+    position: absolute; /* Posiciona a imagem para cobrir o slide */
+    top: 0;
+    left: 0;
+    z-index: 1; /* Garante que a imagem fique atrás do texto */
+}
+
+.carousel-slide p {
+    position: absolute; /* Posiciona o texto sobre a imagem */
+    bottom: 10px; /* Ajuste conforme necessário */
+    left: 20px; /* Ajuste conforme necessário */
+    color: white; /* Cor do texto para contrastar com a imagem */
+    background-color: rgba(0, 0, 0, 0.3); /* Adiciona um fundo semi-transparente para melhorar a legibilidade */
+    padding: 3px;
+    border-radius: 5px;
+    z-index: 2; /* Garante que o texto fique sobre a imagem */
+    text-align: center;
+}
+
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+    transform: translateY(-50%);
+    font-size: 18px;
+}
+
+.carousel-button.prev {
+    left: 10px;
+}
+
+.carousel-button.next {
+    right: 10px;
+}
+
+.central {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+    width: 630px;
+}
+
+.table-cell {
+    flex: 1;
+    text-align: center;
+    padding: 5px 5px;
+}
+
+.table-body {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.table-body li {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.table-body li:last-child {
+    border-bottom: none;
 }

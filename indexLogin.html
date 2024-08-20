@@ -14,7 +14,10 @@
             if (username === "admin" && password === "admin") {
                 window.location.href = "indexAdmin.html"; // Redirecionar para a página de administração
                 return false; // Impedir o envio do formulário para evitar o recarregamento da página
-            } else {
+            }if (username === "vanessasecaf" && password === "1234") {
+                window.location.href = "indexPais.html"; // Redirecionar para a página de administração
+                return false; // Impedir o envio do formulário para evitar o recarregamento da página
+            }else {
                 alert("Usuário ou senha incorretos!");
                 return false; // Impedir o envio do formulário
             }
