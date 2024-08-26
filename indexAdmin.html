@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         cardList.innerHTML = ''; // Limpa a lista existente
                         data.forEach(card => {
                             const li = document.createElement('li');
-                            li.innerHTML = ${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>;
+                            li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
                             cardList.appendChild(li);
                         });
                     } catch (error) {
@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         viewCardList.innerHTML = ''; // Limpa a lista existente
                         data.forEach(card => {
                             const li = document.createElement('li');
-                            li.innerHTML = ${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>;
+                            li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
                             viewCardList.appendChild(li);
                         });
                     } catch (error) {
@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
-    const timeString = ${hours}:${minutes}:${seconds};
+    const timeString = `${hours}:${minutes}:${seconds}`;
     
     document.getElementById('clock').textContent = timeString;
 
@@ -408,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0'); // Mês começa do 0
     const year = now.getFullYear();
-    const dateString = ${day}/${month}/${year};
+    const dateString = `${day}/${month}/${year}`;
     
     document.getElementById('date').textContent = dateString;
 }
@@ -430,7 +430,7 @@ function showSlide(index) {
         currentSlide = index;
     }
 
-    slides.style.transform = translateX(-${currentSlide * 100}%);
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
 }
 
 function nextSlide() {
