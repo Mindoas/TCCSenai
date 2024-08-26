@@ -332,28 +332,28 @@ apagarListaBtn.addEventListener('click', apagarLista);
 // }
 
     
-        // // Função para carregar e exibir os cartões na lista de ver cartões
-        // function loadCardList(searchTerm = '') {
-        //     fetch('get_cards.php?search=' + encodeURIComponent(searchTerm))
-        //         .then(response => response.text()) // Recebe como texto para depuração
-        //         .then(text => {
-        //             try {
-        //                 const data = JSON.parse(text); // Tenta parsear como JSON
-        //                 viewCardList.innerHTML = ''; // Limpa a lista existente
-        //                 data.forEach(card => {
-        //                     const li = document.createElement('li');
-        //                     li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
-        //                     viewCardList.appendChild(li);
-        //                 });
-        //             } catch (error) {
-        //                 console.error('Erro de parsing JSON:', error);
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Erro:', error);
-        //             alert('Erro ao carregar os cartões.');
-        //         });
-        // }
+        // Função para carregar e exibir os cartões na lista de ver cartões
+        function loadCardList(searchTerm = '') {
+            fetch('get_cards.php?search=' + encodeURIComponent(searchTerm))
+                .then(response => response.text()) // Recebe como texto para depuração
+                .then(text => {
+                    try {
+                        const data = JSON.parse(text); // Tenta parsear como JSON
+                        viewCardList.innerHTML = ''; // Limpa a lista existente
+                        data.forEach(card => {
+                            const li = document.createElement('li');
+                            li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
+                            viewCardList.appendChild(li);
+                        });
+                    } catch (error) {
+                        console.error('Erro de parsing JSON:', error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao carregar os cartões.');
+                });
+        }
     
         // Função para excluir um cartão
         function deleteCard(id) {
