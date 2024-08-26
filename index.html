@@ -47,9 +47,13 @@ function atualizarHorario() {
         
         let nomesArmazenados = []; // Inicialize a variável
 
-function verificarTeclaEnter(event) {
+        function verificarTeclaEnter(event) {
     if (event.key === "Enter") {
-        const codigoAluno = document.getElementById("codigoAluno").value;                
+        const codigoAluno = document.getElementById("codigoAluno").value;
+
+        // Limpar a barra de entrada antes de iniciar a requisição
+        document.getElementById("codigoAluno").value = "";
+
         fetch('backindex.php', {
             method: 'POST',
             headers: {
@@ -73,6 +77,8 @@ function verificarTeclaEnter(event) {
         });
     }
 }
+
+
 
 // Função para atualizar a lista de nomes
 function atualizarListaNomes() {
