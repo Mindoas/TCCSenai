@@ -7,6 +7,7 @@ body {
     height: 100vh;
 }
 
+
 .sidebar {
     background-color: #ffffff;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -448,4 +449,22 @@ select:focus {
 
 .table-body li:last-child {
     border-bottom: none;
+}
+
+/* Estilo para a tabela */
+#data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* Ajuste a margem conforme necessário */
+}
+
+#data-table th, #data-table td {
+    border: 1px solid #ddd;
+    padding: 12px; /* Ajuste o padding conforme necessário */
+    text-align: left;
+}
+
+#data-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
 }

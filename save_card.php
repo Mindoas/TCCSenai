@@ -17,10 +17,11 @@ if ($conn->connect_error) {
 // Obtém os dados do formulário via POST
 $nome_cartao = $_POST['card-name'];
 $info_cartao = $_POST['card-info'];
+$serie_cartao = $_POST['card-serie'];
 
 // Prepara a consulta SQL para evitar SQL Injection
-$stmt = $conn->prepare("INSERT INTO cartoes (nome, info) VALUES (?, ?)");
-$stmt->bind_param("ss", $nome_cartao, $info_cartao);
+$stmt = $conn->prepare("INSERT INTO cartoes (nome, info, serie) VALUES (?, ?, ?)");
+$stmt->bind_param("sss", $nome_cartao, $info_cartao, $serie_cartao );
 
 // Executa a consulta
 if ($stmt->execute()) {

@@ -12,25 +12,22 @@
         <div class="title">
             <h1>Painel Administrador</h1>
         </div>
-        <div class="blank-space">
-            
+         <div class="blank-space">
             <div class="container">
-                <div class="table-header">
-                    <div class="table-cell">NOME</div>
-                    <div class="table-cell">SÉRIE</div>
-                    <div class="table-cell">HORÁRIO</div>
-                </div>
-                <ul id="listaNomes" class="table-body">
-                    <!-- Itens da lista serão adicionados aqui -->
-                </ul>
-                <ul id="listaSerie" class="table-body">
-
-                </ul>
-                <ul id="listaHora" class="table-body">
-
-                </ul>
+                <!-- Tabela para exibir dados -->
+                <table id="data-table">
+                    <thead>
+                        <tr>
+                            <th>NOME</th>
+                            <th>SÉRIE</th>
+                            <th>HORÁRIO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- As linhas da tabela serão adicionadas aqui -->
+                    </tbody>
+                </table>
             </div>
-            
         </div>
     </div>
     <div class="content">
@@ -137,31 +134,33 @@
 </div>
 
     <script>
-         document.addEventListener('DOMContentLoaded', () => {
-            fetch('getNames.php')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const listaNomes = document.getElementById("listaNomes");
-                        listaNomes.innerHTML = ""; // Limpa a lista existente
-                        data.nomes.forEach(nome => {
-                            const li = document.createElement("li");
-                            li.textContent = nome;
-                            listaNomes.appendChild(li);
-                        });
-                    } else {
-                        console.error('Erro ao obter nomes.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
-        });
+        //  document.addEventListener('DOMContentLoaded', () => {
+        //    fetch('getNames.php')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.success) {
+        //                 const listaNomes = document.getElementById("listaNomes");
+        //                 const listaSerie2 = document.getElementById("listaSerie");
+        //                 console.log("test" + listaNomes)
+        //                 // listaNomes.innerHTML = ""; // Limpa a lista existente
+        //                 data.nomes.forEach(nome => {
+        //                     const li = document.createElement("li");
+        //                     li.textContent = nome;
+        //                     listaNomes.appendChild(li);
+        //                 });
+        //             } else {
+        //                 console.error('Erro ao obter nomes.');
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Erro:', error);
+        //         });
+        // });
 
 
 
 
-        let nomesArmazenados = []; // Inicialize a variável
+        //let nomesArmazenados = []; // Inicialize a variável
 
 function verificarTeclaEnter(event) {
     if (event.key === "Enter") {
@@ -215,14 +214,15 @@ function apagarLista() {
 const apagarListaBtn = document.getElementById('apagarListaBtn');
 apagarListaBtn.addEventListener('click', apagarLista);
 
-// Atualiza a lista ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    const armazenados = localStorage.getItem('nomes');
-    if (armazenados) {
-        nomesArmazenados = JSON.parse(armazenados);
-        atualizarListaNomes();
-    }
-});
+// // Atualiza a lista ao carregar a página
+// document.addEventListener('DOMContentLoaded', () => {
+//     const armazenados = localStorage.getItem('nomes');
+       
+//         if (armazenados) {
+//             nomesArmazenados = JSON.parse(armazenados);
+//             atualizarListaNomes();
+//         }
+// });
 
 
 
@@ -306,51 +306,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     
         // Função para carregar e exibir os cartões na lista principal
-        function loadCards() {
-            fetch('get_cards.php')
-                .then(response => response.text()) // Recebe como texto para depuração
-                .then(text => {
-                    try {
-                        const data = JSON.parse(text); // Tenta parsear como JSON
-                        const cardList = document.getElementById('card-list');
-                        cardList.innerHTML = ''; // Limpa a lista existente
-                        data.forEach(card => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
-                            cardList.appendChild(li);
-                        });
-                    } catch (error) {
-                        console.error('Erro de parsing JSON:', error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao carregar os cartões.');
-                });
-        }
+// function loadCards() {
+//     fetch('get_cards.php')
+//         .then(response => response.json())
+//         .then(data => {
+//             const cardList = document.getElementById('card-list');
+//             cardList.innerHTML = ''; // Limpa a lista existente
+//             nomesArmazenados = []; // Reseta nomesArmazenados
+//             seriesArmazenadas = []; // Reseta seriesArmazenadas
+
+//             data.forEach(card => {
+//                 const li = document.createElement('li');
+//                 li.innerHTML = `${card.nome}: ${card.info}: ${card.serie} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
+//                 cardList.appendChild(li);
+
+//                 // Adiciona o nome e a série às variáveis de armazenamento
+//                 nomesArmazenados.push(card.nome);
+//                 seriesArmazenadas.push(card.serie);
+//             });
+//         })
+//         .catch(error => {
+//             console.error('Erro:', error);
+//             alert('Erro ao carregar os cartões.');
+//         });
+// }
+
     
-        // Função para carregar e exibir os cartões na lista de ver cartões
-        function loadCardList(searchTerm = '') {
-            fetch('get_cards.php?search=' + encodeURIComponent(searchTerm))
-                .then(response => response.text()) // Recebe como texto para depuração
-                .then(text => {
-                    try {
-                        const data = JSON.parse(text); // Tenta parsear como JSON
-                        viewCardList.innerHTML = ''; // Limpa a lista existente
-                        data.forEach(card => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
-                            viewCardList.appendChild(li);
-                        });
-                    } catch (error) {
-                        console.error('Erro de parsing JSON:', error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao carregar os cartões.');
-                });
-        }
+        // // Função para carregar e exibir os cartões na lista de ver cartões
+        // function loadCardList(searchTerm = '') {
+        //     fetch('get_cards.php?search=' + encodeURIComponent(searchTerm))
+        //         .then(response => response.text()) // Recebe como texto para depuração
+        //         .then(text => {
+        //             try {
+        //                 const data = JSON.parse(text); // Tenta parsear como JSON
+        //                 viewCardList.innerHTML = ''; // Limpa a lista existente
+        //                 data.forEach(card => {
+        //                     const li = document.createElement('li');
+        //                     li.innerHTML = `${card.nome}: ${card.info} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
+        //                     viewCardList.appendChild(li);
+        //                 });
+        //             } catch (error) {
+        //                 console.error('Erro de parsing JSON:', error);
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Erro:', error);
+        //             alert('Erro ao carregar os cartões.');
+        //         });
+        // }
     
         // Função para excluir um cartão
         function deleteCard(id) {
@@ -399,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     
         // Carregar cartões ao abrir a página
-        window.addEventListener('load', loadCards);
+       // window.addEventListener('load', loadCards);
 
         function updateClock() {
     const now = new Date();
@@ -451,18 +454,89 @@ function prevSlide() {
 setInterval(nextSlide, 8000);
 
 
-function adicionarNome(nome, serie, horario) {
-    const lista = document.getElementById('listaNomes');
+// function adicionarNome(nome, serie, horario) {
+//     const lista = document.getElementById('listaNomes');
     
-    const item = document.createElement('li');
-    item.innerHTML = `
-        <div class="table-cell">${nome}</div>
-        <div class="table-cell">${serie}</div>
-        <div class="table-cell">${horario}</div>
-    `;
+//     const item = document.createElement('li');
+//     item.innerHTML = `
+//         <div class="table-cell">${nome}</div>
+//         <div class="table-cell">${serie}</div>
+//         <div class="table-cell">${horario}</div>
+//     `;
     
-    lista.appendChild(item);
+//     lista.appendChild(item);
+// }
+
+
+
+
+
+
+// Função para procurar e exibir a série correspondente a um nome
+function procurarSerie(nome) {
+    const index = nomesArmazenados.indexOf(nome);
+    if (index !== -1) {
+        // Encontrou o nome, então mostra a série correspondente
+        const serie = seriesArmazenadas[index];
+        atualizarListaSeries([serie]); // Atualiza a lista com a série encontrada
+    } else {
+        // Nome não encontrado
+        atualizarListaSeries([]);
+    }
 }
+
+// Função para atualizar a lista de séries
+function atualizarListaSeries(series) {
+    const listaSerie = document.getElementById("listaSerie");
+    listaSerie.innerHTML = ""; // Limpa a lista existente
+    series.forEach(serie => {
+        const li = document.createElement("li");
+        li.textContent = serie;
+        listaSerie.appendChild(li);
+    });
+    
+}
+
+// Função para carregar e exibir dados da tabela
+// Função para carregar e exibir dados da tabela
+function loadTableData() {
+            fetch('get_painel_adm.php')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById("table-body");
+                    
+                    // Limpa as linhas existentes
+                    tableBody.innerHTML = "";
+
+                    data.forEach(item => {
+                        // Cria uma linha da tabela
+                        const row = document.createElement("tr");
+
+                        // Cria e adiciona as células
+                        const cellNome = document.createElement("td");
+                        cellNome.textContent = item.nome;
+                        row.appendChild(cellNome);
+
+                        const cellSerie = document.createElement("td");
+                        cellSerie.textContent = item.serie;
+                        row.appendChild(cellSerie);
+
+                        const cellHora = document.createElement("td");
+                        cellHora.textContent = item.horario;
+                        row.appendChild(cellHora);
+
+                        // Adiciona a linha à tabela
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar os dados:', error);
+                });
+        }
+
+        // Carregar dados ao abrir a página
+        window.addEventListener('load', loadTableData);
+
     </script>
     
 </body>
