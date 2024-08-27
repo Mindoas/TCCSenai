@@ -306,30 +306,30 @@ apagarListaBtn.addEventListener('click', apagarLista);
         });
     
         // Função para carregar e exibir os cartões na lista principal
-// function loadCards() {
-//     fetch('get_cards.php')
-//         .then(response => response.json())
-//         .then(data => {
-//             const cardList = document.getElementById('card-list');
-//             cardList.innerHTML = ''; // Limpa a lista existente
-//             nomesArmazenados = []; // Reseta nomesArmazenados
-//             seriesArmazenadas = []; // Reseta seriesArmazenadas
+function loadCards() {
+    fetch('get_cards.php')
+        .then(response => response.json())
+        .then(data => {
+            const cardList = document.getElementById('card-list');
+            cardList.innerHTML = ''; // Limpa a lista existente
+            nomesArmazenados = []; // Reseta nomesArmazenados
+            seriesArmazenadas = []; // Reseta seriesArmazenadas
 
-//             data.forEach(card => {
-//                 const li = document.createElement('li');
-//                 li.innerHTML = `${card.nome}: ${card.info}: ${card.serie} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
-//                 cardList.appendChild(li);
+            data.forEach(card => {
+                const li = document.createElement('li');
+                li.innerHTML = `${card.nome}: ${card.info}: ${card.serie} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
+                cardList.appendChild(li);
 
-//                 // Adiciona o nome e a série às variáveis de armazenamento
-//                 nomesArmazenados.push(card.nome);
-//                 seriesArmazenadas.push(card.serie);
-//             });
-//         })
-//         .catch(error => {
-//             console.error('Erro:', error);
-//             alert('Erro ao carregar os cartões.');
-//         });
-// }
+                // Adiciona o nome e a série às variáveis de armazenamento
+                nomesArmazenados.push(card.nome);
+                seriesArmazenadas.push(card.serie);
+            });
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            // alert('Erro ao carregar os cartões.');
+        });
+}
 
     
         // Função para carregar e exibir os cartões na lista de ver cartões
@@ -452,20 +452,6 @@ function prevSlide() {
 
 // Optionally, you can add automatic slide transition
 setInterval(nextSlide, 8000);
-
-
-// function adicionarNome(nome, serie, horario) {
-//     const lista = document.getElementById('listaNomes');
-    
-//     const item = document.createElement('li');
-//     item.innerHTML = `
-//         <div class="table-cell">${nome}</div>
-//         <div class="table-cell">${serie}</div>
-//         <div class="table-cell">${horario}</div>
-//     `;
-    
-//     lista.appendChild(item);
-// }
 
 
 
