@@ -136,29 +136,65 @@
     </div>
 </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- O pop-up imprimir -->
 <div id="popup-impr-cards-popup" class="popup">
     <div class="popup-content">
         <span class="close-btn" id="close-impr-cards">&times;</span>
         <h2>Imprimir Relatório</h2>
-        <label for="card-filtro">Filtrar</label>
-                <select id="filtro-impr" name="card-impr" required>
-                    <option value="Serie">Por Série</option>
-                    <option value="Nome">Por Nome</option>
-                    <option value="codigo">Por Id</option>
-                    <option value="Entrada">Por Entrada</option>
-                    <option value="Saida">Por Saída</option>
-                    <option value="Ausente">Ausentes</option>
+        <form id="report-form" action="rel_completo.php" method="GET">
+            <label for="filtro-impr">Filtrar</label>
+            <select id="filtro-impr" name="filtro-impr" required>
+                <option value="">Selecione um filtro</option>
+                <option value="Completo">Completo (dia)</option>
+                <option value="Serie">Por Série</option>
+                <option value="Nome">Por Nome</option>
+                <option value="codigo">Por Id</option>
+                <option value="Entrada">Por Entrada</option>
+                <option value="Saida">Por Saída</option>
+                <option value="Ausente">Ausentes</option>
+            </select><br>
+
+            <div id="sub-filtro-container" style="display: none;">
+                <label for="sub-filtro">Detalhamento</label>
+                <select id="sub-filtro" name="sub-filtro">
+                    <!-- Opções serão preenchidas dinamicamente -->
                 </select><br>
-                
-                <button type="submit">imprimir</button>
-        <!-- <button class="impr" onclick="window.open('relatorios/rel_completo.php', '_blank')">Imprimir Relatório</button> -->
-        
+            </div>
+
+            <div id="input-container" style="display: none;">
+                <label for="search-input" id="input-label"></label>
+                <input type="text" id="search-input" name="search-input" placeholder="Digite aqui...">
+            </div><br>
+
+            <button type="submit">Imprimir</button>
+            <button type="button" id="reset-filters">Resetar Filtros</button>
+            <button type="button" id="set-status-absent">Finalizar Dia</button>
+        </form>
     </div>
 </div>
-    <script>
 
-        //let nomesArmazenados = []; // Inicialize a variável
+
+    
+    
+
+
+
+    <script>
 
 function verificarTeclaEnter(event) {
     if (event.key === "Enter") {
@@ -564,29 +600,115 @@ function getStatusText(flag) {
 
 
 
+   
+
+
+
+
+
+
+
+
+
         document.addEventListener('DOMContentLoaded', function() {
-        // Referências aos elementos
-        var btn = document.getElementById('popup-impr-cards');
-        var popup = document.getElementById('popup-impr-cards-popup');
-        var closeBtn = document.getElementById('close-impr-cards');
+    var btn = document.getElementById('popup-impr-cards');
+    var popup = document.getElementById('popup-impr-cards-popup');
+    var closeBtn = document.getElementById('close-impr-cards');
+    var filtroImpr = document.getElementById('filtro-impr');
+    var subFiltro = document.getElementById('sub-filtro');
+    var subFiltroContainer = document.getElementById('sub-filtro-container');
+    var inputContainer = document.getElementById('input-container');
+    var searchInput = document.getElementById('search-input');
+    var inputLabel = document.getElementById('input-label');
+    var reportForm = document.getElementById('report-form');
+    var resetFilters = document.getElementById('reset-filters');
+    var setStatusAbsent = document.getElementById('set-status-absent');
 
-        // Abre o pop-up quando o botão é clicado
-        btn.onclick = function() {
-            popup.style.display = 'block';
-        };
+    // Função para atualizar o segundo select e os campos de entrada
+    function updateFilters() {
+        var selectedValue = filtroImpr.value;
 
-        // Fecha o pop-up quando o botão de fechar é clicado
-        closeBtn.onclick = function() {
-            popup.style.display = 'none';
-        };
+        subFiltro.innerHTML = '';
+        subFiltroContainer.style.display = 'none';
+        inputContainer.style.display = 'none';
 
-        // Fecha o pop-up quando o usuário clica fora do pop-up
-        window.onclick = function(event) {
-            if (event.target == popup) {
-                popup.style.display = 'none';
-            }
-        };
+        if (selectedValue === 'Serie') {
+            subFiltroContainer.style.display = 'block';
+            var options = [
+                '1EF', '2EF', '3EF', '4EF', '5EF',
+                '6EF', '7EF', '8EF', '9EF', '1EM',
+                '2EM', '3EM'
+            ];
+            options.forEach(function(optionText) {
+                var option = document.createElement('option');
+                option.value = optionText;
+                option.textContent = optionText;
+                subFiltro.appendChild(option);
+            });
+        } else if (selectedValue === 'Nome') {
+            inputLabel.textContent = 'Digite o nome:';
+            inputContainer.style.display = 'block';
+        } else if (selectedValue === 'codigo') {
+            inputLabel.textContent = 'Digite o código:';
+            inputContainer.style.display = 'block';
+        }
+    }
+
+    // Função para resetar os filtros
+    function resetFiltersFunction() {
+        filtroImpr.value = '';
+        subFiltro.innerHTML = '';
+        subFiltroContainer.style.display = 'none';
+        inputContainer.style.display = 'none';
+        searchInput.value = '';
+    }
+
+    filtroImpr.addEventListener('change', updateFilters);
+
+    resetFilters.addEventListener('click', function() {
+        resetFiltersFunction();
     });
+
+    setStatusAbsent.addEventListener('click', function() {
+        if (confirm("Tem certeza de que deseja definir o status como 'Ausente' e excluir todos os registros?")) {
+            window.location.href = 'set_status_absent.php';
+        }
+    });
+
+    btn.onclick = function() {
+        popup.style.display = 'block';
+    };
+
+    closeBtn.onclick = function() {
+        popup.style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+        if (event.target == popup) {
+            popup.style.display = 'none';
+        }
+    };
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     </script>

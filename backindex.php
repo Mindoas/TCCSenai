@@ -48,25 +48,30 @@ if ($result->num_rows > 0) {
     $nome = $row['nome'];
     $flag = $row['flag'];
 
+    $nova_flag = ($flag + 1) % 3;
+    if($flag == 0) {
+        $nova_flag = 1;
+    }
+
 
     // Define o status baseado na flag
     switch ($flag) {
         case 0:
-            $status = 'ENTRADA';
+            $status = 'AUSENTE';
             $mensagem = "Aluno marcado como presente (entrada)";
             break;
         case 1:
-            $status = 'SAIDA';
+            $status = 'ENTRADA';
             $mensagem = "Aluno marcado como ausente (saída)";
             break;
-        default:
-            $status = 'AUSENTE';
+        case 2:
+            $status = 'SAIDA';
             $mensagem = "Estado do aluno não definido";
             break;
     }
 
     // Atualiza a flag no banco de dados
-    $nova_flag = ($flag + 1) % 3;
+ 
     $sql_update_flag = "UPDATE cartoes SET flag = ? WHERE id = ?";
     $stmt_update_flag = $conn->prepare($sql_update_flag);
     
