@@ -18,6 +18,7 @@
                 <p id="cardtext">Aproxime o Cartão</p>
                 <input type="text" id="codigoAluno" onkeypress="verificarTeclaEnter(event)">
                 <p class="aluno_baixo" id="nomeAluno"></p>
+                <p id="mensagem"></p> <!-- Elemento para exibir a mensagem de presença -->
             </div>
         </div>
     </div>
@@ -36,6 +37,7 @@ function atualizarHorario() {
             document.getElementById('clock').innerText = horario;
         }
 
+
         // Atualiza a hora a cada segundo
         setInterval(atualizarHorario, 1000);
 
@@ -44,79 +46,78 @@ function atualizarHorario() {
             atualizarHorario();
         });
 
-        
         let nomesArmazenados = []; // Inicialize a variável
 
         function verificarTeclaEnter(event) {
-    if (event.key === "Enter") {
-        const codigoAluno = document.getElementById("codigoAluno").value;
+            if (event.key === "Enter") {
+                const codigoAluno = document.getElementById("codigoAluno").value;
 
-        // Limpar a barra de entrada antes de iniciar a requisição
-        document.getElementById("codigoAluno").value = "";
+                // Limpar a barra de entrada antes de iniciar a requisição
+                document.getElementById("codigoAluno").value = "";
 
-        fetch('backindex.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ codigo: codigoAluno })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.existe) {
-                document.getElementById("nomeAluno").innerText = data.nome;
-                nomesArmazenados.push(data.nome);
-                localStorage.setItem('nomes', JSON.stringify(nomesArmazenados));
-                atualizarListaNomes();
-            } else {
-                document.getElementById("nomeAluno").innerText = "Código não encontrado!";
+                fetch('backindex.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ codigo: codigoAluno })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Adicione este log para depuração
+                    if (data.existe) {
+                        document.getElementById("nomeAluno").innerText = data.nome;
+                        nomesArmazenados.push(data.nome);
+                        localStorage.setItem('nomes', JSON.stringify(nomesArmazenados));
+                        //atualizarListaNomes();
+                    } else {
+                        document.getElementById("nomeAluno").innerText = "Código não encontrado!";
+                        document.getElementById("mensagem").innerText = ""; // Limpa a mensagem se o aluno não for encontrado
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);''
+                    document.getElementById("mensagem").innerText = ""; // Mensagem de erro
+                });
+
+        }
+    }
+
+        // Função para atualizar a lista de nomes
+        function atualizarListaNomes() {
+            const listaNomes = document.getElementById("listaNomes");
+            listaNomes.innerHTML = ""; // Limpa a lista
+            nomesArmazenados.forEach(nome => {
+                const li = document.createElement("li");
+                li.textContent = nome;
+                listaNomes.appendChild(li);
+            });
+        }
+
+        // Função para apagar a lista e limpar o localStorage
+        function apagarLista() {
+            const listaNomes = document.getElementById("listaNomes");
+            while (listaNomes.firstChild) {
+                listaNomes.removeChild(listaNomes.firstChild);
             }
-        })
-        .catch(error => {
-            console.error('Erro:', error);
+            nomesArmazenados = []; // Limpa o array de nomes
+            localStorage.removeItem('nomes'); // Remove o item do localStorage
+        }
+
+        // Adiciona o event listener ao botão
+        const apagarListaBtn = document.getElementById('apagarListaBtn');
+        apagarListaBtn.addEventListener('click', apagarLista);
+
+        // Atualiza a lista ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            const armazenados = localStorage.getItem('nomes');
+            if (armazenados) {
+                nomesArmazenados = JSON.parse(armazenados);
+                atualizarListaNomes();
+            }
+            atualizarHorario(); // Atualiza o horário ao carregar a página
+            setInterval(atualizarHorario, 1000); // Atualiza o horário a cada segundo
         });
-    }
-}
-
-
-
-// Função para atualizar a lista de nomes
-function atualizarListaNomes() {
-    const listaNomes = document.getElementById("listaNomes");
-    listaNomes.innerHTML = ""; // Limpa a lista
-    nomesArmazenados.forEach(nome => {
-        const li = document.createElement("li");
-        li.textContent = nome;
-        listaNomes.appendChild(li);
-    });
-}
-
-// Função para apagar a lista e limpar o localStorage
-function apagarLista() {
-    const listaNomes = document.getElementById("listaNomes");
-    while (listaNomes.firstChild) {
-        listaNomes.removeChild(listaNomes.firstChild);
-    }
-    nomesArmazenados = []; // Limpa o array de nomes
-    localStorage.removeItem('nomes'); // Remove o item do localStorage
-}
-
-// Adiciona o event listener ao botão
-const apagarListaBtn = document.getElementById('apagarListaBtn');
-apagarListaBtn.addEventListener('click', apagarLista);
-
-// Atualiza a lista ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    const armazenados = localStorage.getItem('nomes');
-    if (armazenados) {
-        nomesArmazenados = JSON.parse(armazenados);
-        atualizarListaNomes();
-    }
-    atualizarHorario(); // Atualiza o horário ao carregar a página
-    setInterval(atualizarHorario, 1000); // Atualiza o horário a cada segundo
-});
-
-
 
     </script>
 </body>

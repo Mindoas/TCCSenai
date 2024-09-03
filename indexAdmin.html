@@ -21,6 +21,7 @@
                             <th>NOME</th>
                             <th>SÉRIE</th>
                             <th>HORÁRIO</th>
+                            <th>STATUS</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
@@ -36,7 +37,9 @@
             <button class="back-button" onclick="location.href='index.html'">Voltar ao Inicio</button>
             <button class="add" id="open-popup">Adicionar Cartão</button>
             <button class="view" id="view-cards">Ver Cadastros</button>
-            <button class="impr" id="apagarListaBtn">Imprimir Relatorio</button>
+            <button class="impr" id="popup-impr-cards">Concluir</button>
+            
+            
         </div>
         <div class="central">
             <div class="carousel">
@@ -133,32 +136,27 @@
     </div>
 </div>
 
+<!-- O pop-up imprimir -->
+<div id="popup-impr-cards-popup" class="popup">
+    <div class="popup-content">
+        <span class="close-btn" id="close-impr-cards">&times;</span>
+        <h2>Imprimir Relatório</h2>
+        <label for="card-filtro">Filtrar</label>
+                <select id="filtro-impr" name="card-impr" required>
+                    <option value="Serie">Por Série</option>
+                    <option value="Nome">Por Nome</option>
+                    <option value="codigo">Por Id</option>
+                    <option value="Entrada">Por Entrada</option>
+                    <option value="Saida">Por Saída</option>
+                    <option value="Ausente">Ausentes</option>
+                </select><br>
+                
+                <button type="submit">imprimir</button>
+        <!-- <button class="impr" onclick="window.open('relatorios/rel_completo.php', '_blank')">Imprimir Relatório</button> -->
+        
+    </div>
+</div>
     <script>
-        //  document.addEventListener('DOMContentLoaded', () => {
-        //    fetch('getNames.php')
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             if (data.success) {
-        //                 const listaNomes = document.getElementById("listaNomes");
-        //                 const listaSerie2 = document.getElementById("listaSerie");
-        //                 console.log("test" + listaNomes)
-        //                 // listaNomes.innerHTML = ""; // Limpa a lista existente
-        //                 data.nomes.forEach(nome => {
-        //                     const li = document.createElement("li");
-        //                     li.textContent = nome;
-        //                     listaNomes.appendChild(li);
-        //                 });
-        //             } else {
-        //                 console.error('Erro ao obter nomes.');
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Erro:', error);
-        //         });
-        // });
-
-
-
 
         //let nomesArmazenados = []; // Inicialize a variável
 
@@ -175,6 +173,7 @@ function verificarTeclaEnter(event) {
         .then(response => response.json())
         .then(data => {
             if (data.existe) {
+                console.log(data);
                 document.getElementById("nomeAluno").innerText = data.nome;
                 nomesArmazenados.push(data.nome);
                 localStorage.setItem('nomes', JSON.stringify(nomesArmazenados));
@@ -201,28 +200,28 @@ function atualizarListaNomes() {
 }
 
 // Função para apagar a lista e limpar o localStorage
-function apagarLista() {
-    const listaNomes = document.getElementById("listaNomes");
-    while (listaNomes.firstChild) {
-        listaNomes.removeChild(listaNomes.firstChild);
-    }
-    nomesArmazenados = []; // Limpa o array de nomes
-    localStorage.removeItem('nomes'); // Remove o item do localStorage
-}
+// function apagarLista() {
+//     const listaNomes = document.getElementById("listaNomes");
+//     while (listaNomes.firstChild) {
+//         listaNomes.removeChild(listaNomes.firstChild);
+//     }
+//     nomesArmazenados = []; // Limpa o array de nomes
+//     localStorage.removeItem('nomes'); // Remove o item do localStorage
+// }
 
-// Adiciona o event listener ao botão
-const apagarListaBtn = document.getElementById('apagarListaBtn');
-apagarListaBtn.addEventListener('click', apagarLista);
+// // Adiciona o event listener ao botão
+// const apagarListaBtn = document.getElementById('apagarListaBtn');
+// apagarListaBtn.addEventListener('click', apagarLista);
 
-// // Atualiza a lista ao carregar a página
-// document.addEventListener('DOMContentLoaded', () => {
-//     const armazenados = localStorage.getItem('nomes');
+// Atualiza a lista ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    const armazenados = localStorage.getItem('nomes');
        
-//         if (armazenados) {
-//             nomesArmazenados = JSON.parse(armazenados);
-//             atualizarListaNomes();
-//         }
-// });
+        if (armazenados) {
+            nomesArmazenados = JSON.parse(armazenados);
+            atualizarListaNomes();
+        }
+});
 
 
 
@@ -314,15 +313,17 @@ function loadCards() {
             cardList.innerHTML = ''; // Limpa a lista existente
             nomesArmazenados = []; // Reseta nomesArmazenados
             seriesArmazenadas = []; // Reseta seriesArmazenadas
+            statusArmazenados = []; // reseta statusArmazenados
 
             data.forEach(card => {
                 const li = document.createElement('li');
-                li.innerHTML = `${card.nome}: ${card.info}: ${card.serie} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
+                li.innerHTML = `${card.nome}: ${card.info}: ${card.serie}: ${card.status} <button class="delete-button" onclick="deleteCard(${card.id})">Excluir</button>`;
                 cardList.appendChild(li);
 
                 // Adiciona o nome e a série às variáveis de armazenamento
                 nomesArmazenados.push(card.nome);
                 seriesArmazenadas.push(card.serie);
+                statusArmazenados.push(card.status);
             });
         })
         .catch(error => {
@@ -484,44 +485,109 @@ function atualizarListaSeries(series) {
 }
 
 // Função para carregar e exibir dados da tabela
-// Função para carregar e exibir dados da tabela
+let cardsData = {}; // Objeto para armazenar os cartões com suas informações
+
 function loadTableData() {
-            fetch('get_painel_adm.php')
-                .then(response => response.json())
-                .then(data => {
-                    const tableBody = document.getElementById("table-body");
-                    
-                    // Limpa as linhas existentes
-                    tableBody.innerHTML = "";
+    fetch('get_painel_adm.php')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // Verifique os dados no console
 
-                    data.forEach(item => {
-                        // Cria uma linha da tabela
-                        const row = document.createElement("tr");
+            const tableBody = document.getElementById("table-body");
+            tableBody.innerHTML = ""; // Limpa a tabela existente
 
-                        // Cria e adiciona as células
-                        const cellNome = document.createElement("td");
-                        cellNome.textContent = item.nome;
-                        row.appendChild(cellNome);
+            // Preenche a tabela com os dados recebidos
+            data.forEach(item => {
+                const row = document.createElement("tr");
 
-                        const cellSerie = document.createElement("td");
-                        cellSerie.textContent = item.serie;
-                        row.appendChild(cellSerie);
+                const cellNome = document.createElement("td");
+                cellNome.textContent = item.nome;
+                row.appendChild(cellNome);
 
-                        const cellHora = document.createElement("td");
-                        cellHora.textContent = item.horario;
-                        row.appendChild(cellHora);
+                const cellSerie = document.createElement("td");
+                cellSerie.textContent = item.serie;
+                row.appendChild(cellSerie);
 
-                        // Adiciona a linha à tabela
-                        tableBody.appendChild(row);
-                    });
-                })
-                .catch(error => {
-                    console.error('Erro ao carregar os dados:', error);
-                });
-        }
+                const cellHora = document.createElement("td");
+                cellHora.textContent = item.horario;
+                row.appendChild(cellHora);
+
+                const cellStatus = document.createElement("td");
+                cellStatus.textContent = item.status;
+                row.appendChild(cellStatus);
+
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Erro ao carregar os dados:', error);
+        });
+}
+
+
+// Função para obter o texto do status com base no valor do flag
+function getStatusText(flag) {
+    if (flag === 2) return "SAIDA";
+    if (flag === 1) return "ENTRADA";
+    return " ";
+}
 
         // Carregar dados ao abrir a página
         window.addEventListener('load', loadTableData);
+
+        function printPDF() {
+            var iframe = document.createElement('iframe');
+            iframe.style.visibility = 'hidden';
+            iframe.style.position = 'absolute';
+            iframe.src = 'relatorios/rel_completo.php';
+            document.body.appendChild(iframe);
+
+            iframe.onload = function() {
+                setTimeout(function() {
+                    iframe.contentWindow.print();
+                }, 500); // Ajuste o tempo de espera se necessário
+            };
+            window.onload = printPDF;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+        // Referências aos elementos
+        var btn = document.getElementById('popup-impr-cards');
+        var popup = document.getElementById('popup-impr-cards-popup');
+        var closeBtn = document.getElementById('close-impr-cards');
+
+        // Abre o pop-up quando o botão é clicado
+        btn.onclick = function() {
+            popup.style.display = 'block';
+        };
+
+        // Fecha o pop-up quando o botão de fechar é clicado
+        closeBtn.onclick = function() {
+            popup.style.display = 'none';
+        };
+
+        // Fecha o pop-up quando o usuário clica fora do pop-up
+        window.onclick = function(event) {
+            if (event.target == popup) {
+                popup.style.display = 'none';
+            }
+        };
+    });
+
 
     </script>
     

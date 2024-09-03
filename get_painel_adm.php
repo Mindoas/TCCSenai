@@ -1,13 +1,13 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/json'); // Define o tipo de resposta como JSON
 
-// Conectar ao banco de dados (ajuste com as credenciais corretas)
+// Configurações de conexão com o banco de dados
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "meu_banco_frequencia";
 
-// Cria uma nova conexão com o banco de dados usando MySQLi
+// Tenta criar uma nova conexão com o banco de dados
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Verifica se houve um erro na conexão
@@ -16,13 +16,11 @@ if ($conn->connect_error) {
     exit();
 }
 
-// Prepara a consulta SQL para obter os dados da tabela painel_adm
-$sql = "SELECT nome, serie, MAX(datas) AS horario
+// Consulta SQL para obter dados dos cartões para o dia atual
+$sql = "SELECT nome, serie, datas AS horario, status
 FROM paineladm
 JOIN cartoes ON cartoes_id = id
-WHERE DATE(datas) = CURDATE()
-GROUP BY nome, serie;
-";
+WHERE DATE(datas) = CURDATE()";
 
 $result = $conn->query($sql);
 
@@ -32,6 +30,7 @@ if ($result === false) {
     exit();
 }
 
+// Coleta os resultados da consulta em um array
 $data = [];
 while ($row = $result->fetch_assoc()) {
     $data[] = $row;
