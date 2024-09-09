@@ -48,37 +48,41 @@ if ($result->num_rows > 0) {
     $nome = $row['nome'];
     $flag = $row['flag'];
 
-    $nova_flag = ($flag + 1) % 3;
-    if($flag == 0) {
-        $nova_flag = 1;
-    }
+    // Se a flag for 0 (Ausente), muda para 1 (Entrada)
+// Se for 1 (Entrada), muda para 2 (Saída)
+// Se for 2 (Saída), volta para 1 (Entrada)
+if ($flag == 0) {
+    $nova_flag = 1; // Inicia como Entrada
+} elseif ($flag == 1) {
+    $nova_flag = 2; // Muda para Saída
+} elseif ($flag == 2) {
+    $nova_flag = 1; // Volta para Entrada
+}
 
+// Define o status baseado na nova flag
+switch ($nova_flag) {
+    case 1:
+        $status = 'ENTRADA';
+        $mensagem = "Aluno marcado como presente (entrada).";
+        break;
+    case 2:
+        $status = 'SAIDA';
+        $mensagem = "Aluno marcado como ausente (saída).";
+        break;
+    default:
+        $status = 'AUSENTE';
+        $mensagem = "Estado do aluno definido como ausente.";
+        break;
+}
 
-    // Define o status baseado na flag
-    switch ($flag) {
-        case 0:
-            $status = 'AUSENTE';
-            $mensagem = "Aluno marcado como presente (entrada)";
-            break;
-        case 1:
-            $status = 'ENTRADA';
-            $mensagem = "Aluno marcado como ausente (saída)";
-            break;
-        case 2:
-            $status = 'SAIDA';
-            $mensagem = "Estado do aluno não definido";
-            break;
-    }
+// Atualiza a flag no banco de dados
+$sql_update_flag = "UPDATE cartoes SET flag = ? WHERE id = ?";
+$stmt_update_flag = $conn->prepare($sql_update_flag);
 
-    // Atualiza a flag no banco de dados
- 
-    $sql_update_flag = "UPDATE cartoes SET flag = ? WHERE id = ?";
-    $stmt_update_flag = $conn->prepare($sql_update_flag);
-    
-    if (!$stmt_update_flag) {
-        echo json_encode(['erro' => 'Erro na preparação da consulta de atualização: ' . $conn->error]);
-        exit();
-    }
+if (!$stmt_update_flag) {
+    echo json_encode(['erro' => 'Erro na preparação da consulta de atualização: ' . $conn->error]);
+    exit();
+}   
 
     $stmt_update_flag->bind_param("ii", $nova_flag, $id_cartao);
     $stmt_update_flag->execute();

@@ -235,19 +235,6 @@ function atualizarListaNomes() {
     });
 }
 
-// Função para apagar a lista e limpar o localStorage
-// function apagarLista() {
-//     const listaNomes = document.getElementById("listaNomes");
-//     while (listaNomes.firstChild) {
-//         listaNomes.removeChild(listaNomes.firstChild);
-//     }
-//     nomesArmazenados = []; // Limpa o array de nomes
-//     localStorage.removeItem('nomes'); // Remove o item do localStorage
-// }
-
-// // Adiciona o event listener ao botão
-// const apagarListaBtn = document.getElementById('apagarListaBtn');
-// apagarListaBtn.addEventListener('click', apagarLista);
 
 // Atualiza a lista ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
@@ -563,8 +550,8 @@ function loadTableData() {
 
 // Função para obter o texto do status com base no valor do flag
 function getStatusText(flag) {
-    if (flag === 2) return "SAIDA";
     if (flag === 1) return "ENTRADA";
+    if (flag === 2) return "SAIDA";
     return " ";
 }
 
@@ -625,69 +612,84 @@ function getStatusText(flag) {
     var setStatusAbsent = document.getElementById('set-status-absent');
 
     // Função para atualizar o segundo select e os campos de entrada
-    function updateFilters() {
-        var selectedValue = filtroImpr.value;
+function updateFilters() {
+    var selectedValue = filtroImpr.value;
 
-        subFiltro.innerHTML = '';
-        subFiltroContainer.style.display = 'none';
-        inputContainer.style.display = 'none';
+    // Limpa os filtros anteriores
+    subFiltro.innerHTML = '';
+    subFiltroContainer.style.display = 'none';
+    inputContainer.style.display = 'none';
 
-        if (selectedValue === 'Serie') {
-            subFiltroContainer.style.display = 'block';
-            var options = [
-                '1EF', '2EF', '3EF', '4EF', '5EF',
-                '6EF', '7EF', '8EF', '9EF', '1EM',
-                '2EM', '3EM'
-            ];
-            options.forEach(function(optionText) {
-                var option = document.createElement('option');
-                option.value = optionText;
-                option.textContent = optionText;
-                subFiltro.appendChild(option);
-            });
-        } else if (selectedValue === 'Nome') {
-            inputLabel.textContent = 'Digite o nome:';
-            inputContainer.style.display = 'block';
-        } else if (selectedValue === 'codigo') {
-            inputLabel.textContent = 'Digite o código:';
-            inputContainer.style.display = 'block';
-        }
+    if (selectedValue === 'Serie') {
+        subFiltroContainer.style.display = 'block';
+        var options = [
+            '1EF', '2EF', '3EF', '4EF', '5EF',
+            '6EF', '7EF', '8EF', '9EF', '1EM',
+            '2EM', '3EM'
+        ];
+        options.forEach(function(optionText) {
+            var option = document.createElement('option');
+            option.value = optionText;
+            option.textContent = optionText;
+            subFiltro.appendChild(option);
+        });
+    } else if (selectedValue === 'Nome') {
+        inputLabel.textContent = 'Digite o nome:';
+        inputContainer.style.display = 'block';
+    } else if (selectedValue === 'codigo') {
+        inputLabel.textContent = 'Digite o código:';
+        inputContainer.style.display = 'block';
+    } else if (selectedValue === 'Ausente') {
+        // Adiciona o sub-filtro para Ausentes
+        subFiltroContainer.style.display = 'block';
+        var options = [
+            '1EF', '2EF', '3EF', '4EF', '5EF',
+            '6EF', '7EF', '8EF', '9EF', '1EM',
+            '2EM', '3EM'
+        ];
+        options.forEach(function(optionText) {
+            var option = document.createElement('option');
+            option.value = optionText;
+            option.textContent = optionText;
+            subFiltro.appendChild(option);
+        });
     }
+}
 
-    // Função para resetar os filtros
-    function resetFiltersFunction() {
-        filtroImpr.value = '';
-        subFiltro.innerHTML = '';
-        subFiltroContainer.style.display = 'none';
-        inputContainer.style.display = 'none';
-        searchInput.value = '';
+// Função para resetar os filtros
+function resetFiltersFunction() {
+    filtroImpr.value = '';
+    subFiltro.innerHTML = '';
+    subFiltroContainer.style.display = 'none';
+    inputContainer.style.display = 'none';
+    searchInput.value = '';
+}
+
+filtroImpr.addEventListener('change', updateFilters);
+
+resetFilters.addEventListener('click', function() {
+    resetFiltersFunction();
+});
+
+setStatusAbsent.addEventListener('click', function() {
+    if (confirm("Tem certeza de que deseja definir o status como 'Ausente' e excluir todos os registros?")) {
+        window.location.href = 'set_status_absent.php';
     }
+});
 
-    filtroImpr.addEventListener('change', updateFilters);
+btn.onclick = function() {
+    popup.style.display = 'block';
+};
 
-    resetFilters.addEventListener('click', function() {
-        resetFiltersFunction();
-    });
+closeBtn.onclick = function() {
+    popup.style.display = 'none';
+};
 
-    setStatusAbsent.addEventListener('click', function() {
-        if (confirm("Tem certeza de que deseja definir o status como 'Ausente' e excluir todos os registros?")) {
-            window.location.href = 'set_status_absent.php';
-        }
-    });
-
-    btn.onclick = function() {
-        popup.style.display = 'block';
-    };
-
-    closeBtn.onclick = function() {
+window.onclick = function(event) {
+    if (event.target == popup) {
         popup.style.display = 'none';
-    };
-
-    window.onclick = function(event) {
-        if (event.target == popup) {
-            popup.style.display = 'none';
-        }
-    };
+    }
+};
 });
 
 
