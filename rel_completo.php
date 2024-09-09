@@ -34,8 +34,6 @@ if ($filtro === 'Completo') {
     $sql .= " AND status = 'Entrada'";
 } elseif ($filtro === 'Saida') {
     $sql .= " AND status = 'Saida'";
-} elseif ($filtro === 'Ausente') {
-    $sql .= " AND status = 'Ausente'";
 }
 
 $stmt = $conn->prepare($sql);
