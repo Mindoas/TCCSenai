@@ -522,6 +522,12 @@ function loadTableData() {
         });
 }
 
+// Atualiza a tabela imediatamente quando a página carrega
+loadTableData();
+
+// Atualiza a tabela a cada 5 segundos
+setInterval(loadTableData, 5000);
+
 
 // Função para obter o texto do status com base no valor do flag
 function getStatusText(flag) {
