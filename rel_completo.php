@@ -40,32 +40,24 @@ class PDF extends FPDF
 // Instância do PDF
 $pdf = new PDF();
 $pdf->AddPage();
-$pdf->SetFont('Arial', '', '12');
+$pdf->SetFont('Arial', '', 12);
 
 // Construção da consulta SQL conforme o filtro selecionado
-if ($filtro === 'Ausente') {
-    $sql = "SELECT cartoes.id, cartoes.nome, cartoes.serie, cartoes.flag 
-            FROM cartoes 
-            WHERE cartoes.flag = 0";
-    
-    if ($subFiltro !== 'Geral') {
-        $sql .= " AND cartoes.serie = '$subFiltro'";
-    }
-
+if ($filtro === 'Serie') {
+    // Filtro por série
+    $sql = "SELECT paineladm.idpainelAdm, paineladm.datas, cartoes.nome, cartoes.serie, paineladm.status 
+            FROM paineladm 
+            LEFT JOIN cartoes ON paineladm.cartoes_id = cartoes.id
+            WHERE cartoes.serie = '$subFiltro'";
 } else {
+    // Outros filtros mantêm a lógica anterior
     $sql = "SELECT paineladm.idpainelAdm, paineladm.datas, cartoes.nome, cartoes.serie, paineladm.status 
             FROM paineladm 
             LEFT JOIN cartoes ON paineladm.cartoes_id = cartoes.id";
 
     switch ($filtro) {
         case 'Completo':
-            $sql .= " WHERE DATE(paineladm.datas) = CURDATE()"; // Ajuste conforme o campo de data
-            break;
-
-        case 'Serie':
-            if ($subFiltro !== 'Geral') {
-                $sql .= " WHERE cartoes.serie = '$subFiltro'";
-            }
+            $sql .= " WHERE DATE(paineladm.datas) = CURDATE()";
             break;
 
         case 'Nome':
@@ -90,18 +82,28 @@ if ($filtro === 'Ausente') {
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-    $pdf->Cell(30, 10, 'ID', 1);
-    $pdf->Cell(80, 10, 'Nome', 1);
-    $pdf->Cell(40, 10, 'Serie', 1);
+    // Cabeçalho das colunas
+    $pdf->Cell(15, 10, 'ID', 1);
+    $pdf->Cell(60, 10, 'Nome', 1);
+    $pdf->Cell(30, 10, 'Serie', 1);
+    $pdf->Cell(30, 10, 'Data', 1);
+    $pdf->Cell(30, 10, 'Horario', 1);
     $pdf->Cell(30, 10, 'Status', 1);
     $pdf->Ln();
 
     while ($row = $result->fetch_assoc()) {
         $status = isset($row['flag']) ? ($row['flag'] == 1 ? 'Entrada' : ($row['flag'] == 2 ? 'Saida' : 'Ausente')) : $row['status'];
         
-        $pdf->Cell(30, 10, isset($row['id']) ? $row['id'] : $row['idpainelAdm'], 1);
-        $pdf->Cell(80, 10, $row['nome'], 1);
-        $pdf->Cell(40, 10, $row['serie'], 1);
+        // Separar data e hora do campo `datas`
+        $data = date('d/m/Y', strtotime($row['datas']));
+        $hora = date('H:i:s', strtotime($row['datas']));
+
+        // Preenche as células com os dados
+        $pdf->Cell(15, 10, $row['idpainelAdm'], 1);
+        $pdf->Cell(60, 10, $row['nome'], 1);
+        $pdf->Cell(30, 10, $row['serie'], 1);
+        $pdf->Cell(30, 10, $data, 1);
+        $pdf->Cell(30, 10, $hora, 1);
         $pdf->Cell(30, 10, $status, 1);
         $pdf->Ln();
     }
