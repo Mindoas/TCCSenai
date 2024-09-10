@@ -405,9 +405,6 @@ function loadCards() {
             loadCardList(searchTerm); // Carregar cartões filtrados com base na pesquisa
         });
 
-        // Carregar cartões ao abrir a página
-       // window.addEventListener('load', loadCards);
-
         function updateClock() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
@@ -525,8 +522,8 @@ function loadTableData() {
 // Atualiza a tabela imediatamente quando a página carrega
 loadTableData();
 
-// Atualiza a tabela a cada 5 segundos
-setInterval(loadTableData, 5000);
+// Atualiza a tabela a cada 2 segundos
+setInterval(loadTableData, 2000);
 
 
 // Função para obter o texto do status com base no valor do flag
