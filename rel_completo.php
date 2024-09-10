@@ -25,7 +25,7 @@ class PDF extends FPDF
     function Header()
     {
         $this->SetFont('Arial', 'B', 12);
-        $this->Cell(0, 10, 'Relatório de Alunos', 0, 1, 'C');
+        $this->Cell(0, 10, 'Relatorio de Alunos', 0, 1, 'C');
         $this->Ln(10);
     }
 
