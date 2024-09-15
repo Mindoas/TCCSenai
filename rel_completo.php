@@ -44,8 +44,9 @@ $pdf->SetFont('Arial', '', '12');
 
 // Construção da consulta SQL conforme o filtro selecionado
 if ($filtro === 'Ausente') {
-    $sql = "SELECT cartoes.id, cartoes.nome, cartoes.serie, cartoes.flag 
+    $sql = "SELECT cartoes.nome, cartoes.serie, cartoes.flag, paineladm.datas 
             FROM cartoes 
+            LEFT JOIN paineladm ON paineladm.cartoes_id = cartoes.id
             WHERE cartoes.flag = 0";
     
     if ($subFiltro !== 'Geral') {
@@ -53,7 +54,7 @@ if ($filtro === 'Ausente') {
     }
 
 } else {
-    $sql = "SELECT paineladm.idpainelAdm, paineladm.datas, cartoes.nome, cartoes.serie, paineladm.status 
+    $sql = "SELECT paineladm.datas, cartoes.nome, cartoes.serie, paineladm.status 
             FROM paineladm 
             LEFT JOIN cartoes ON paineladm.cartoes_id = cartoes.id";
 
@@ -90,18 +91,27 @@ if ($filtro === 'Ausente') {
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-    $pdf->Cell(30, 10, 'ID', 1);
-    $pdf->Cell(80, 10, 'Nome', 1);
+    // Cabeçalhos da tabela
+    $pdf->Cell(50, 10, 'Nome', 1);
     $pdf->Cell(40, 10, 'Serie', 1);
+    $pdf->Cell(30, 10, 'Data', 1);   // Adicionando coluna de Data
+    $pdf->Cell(30, 10, 'Hora', 1);   // Adicionando coluna de Hora
     $pdf->Cell(30, 10, 'Status', 1);
     $pdf->Ln();
 
     while ($row = $result->fetch_assoc()) {
         $status = isset($row['flag']) ? ($row['flag'] == 1 ? 'Entrada' : ($row['flag'] == 2 ? 'Saida' : 'Ausente')) : $row['status'];
-        
-        $pdf->Cell(30, 10, isset($row['id']) ? $row['id'] : $row['idpainelAdm'], 1);
-        $pdf->Cell(80, 10, $row['nome'], 1);
+
+        // Extração de data e hora da coluna 'datas'
+        $dataHora = explode(' ', $row['datas']);
+        $data = $dataHora[0];
+        $hora = $dataHora[1];
+
+        // Preenchendo as células com os dados corretos
+        $pdf->Cell(50, 10, $row['nome'], 1);
         $pdf->Cell(40, 10, $row['serie'], 1);
+        $pdf->Cell(30, 10, $data, 1); // Preenchendo a data
+        $pdf->Cell(30, 10, $hora, 1); // Preenchendo a hora
         $pdf->Cell(30, 10, $status, 1);
         $pdf->Ln();
     }
