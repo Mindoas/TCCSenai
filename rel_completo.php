@@ -13,6 +13,8 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Falha na conexão: " . $conn->connect_error);
 }
+setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'portuguese');
+
 
 // Obtenha o filtro selecionado
 $filtro = isset($_GET['filtro-impr']) ? $_GET['filtro-impr'] : '';
@@ -25,7 +27,7 @@ class PDF extends FPDF
     function Header()
     {
         $this->SetFont('Arial', 'B', 12);
-        $this->Cell(0, 10, 'Relatório de Alunos', 0, 1, 'C');
+        $this->Cell(0, 10, utf8_decode('Relatório de Alunos'), 0, 1, 'C');
         $this->Ln(10);
     }
 
@@ -92,7 +94,7 @@ $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     // Cabeçalhos da tabela
-    $pdf->Cell(50, 10, 'Nome', 1);
+    $pdf->Cell(65, 10, 'Nome', 1);
     $pdf->Cell(40, 10, 'Serie', 1);
     $pdf->Cell(30, 10, 'Data', 1);   // Adicionando coluna de Data
     $pdf->Cell(30, 10, 'Hora', 1);   // Adicionando coluna de Hora
@@ -102,13 +104,18 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $status = isset($row['flag']) ? ($row['flag'] == 1 ? 'Entrada' : ($row['flag'] == 2 ? 'Saida' : 'Ausente')) : $row['status'];
 
-        // Extração de data e hora da coluna 'datas'
+    // Extração de data e hora da coluna 'datas'
+    if (!empty($row['datas'])) {
         $dataHora = explode(' ', $row['datas']);
-        $data = $dataHora[0];
-        $hora = $dataHora[1];
+        $data = isset($dataHora[0]) ? $dataHora[0] : $data;
+        $hora = isset($dataHora[1]) ? $dataHora[1] : $hora;
+    } else {
+        $data = ' ';
+        $hora = ' ';
+    }
 
         // Preenchendo as células com os dados corretos
-        $pdf->Cell(50, 10, $row['nome'], 1);
+        $pdf->Cell(65, 10, utf8_decode($row['nome']), 1);
         $pdf->Cell(40, 10, $row['serie'], 1);
         $pdf->Cell(30, 10, $data, 1); // Preenchendo a data
         $pdf->Cell(30, 10, $hora, 1); // Preenchendo a hora
@@ -123,5 +130,5 @@ if ($result->num_rows > 0) {
 $conn->close();
 
 // Geração do PDF
-$pdf->Output('D', 'Relatorio_Filtrado.pdf');
+$pdf->Output('D', 'Relatorio.pdf');
 ?>
