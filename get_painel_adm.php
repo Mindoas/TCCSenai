@@ -41,4 +41,5 @@ echo json_encode($data);
 
 // Fecha a conexão com o banco de dados
 $conn->close();
+
 ?>

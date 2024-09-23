@@ -130,7 +130,7 @@ body {
 }
 
 .popup-content {
-    position: absolute;
+    /* position: absolute; */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -138,9 +138,14 @@ body {
     padding: 20px;
     border-radius: 5px;
     width: 600px;
-    height: 80vh;
+    /* height: 80vh; */
     overflow-y: auto;
     text-align: center;
+      display: flex;
+    flex-direction: column; /* Organiza o conteúdo verticalmente */
+    max-width: 500px; /* Ajuste conforme necessário */ 
+    height: auto; /* Ajusta a altura automaticamente conforme o conteúdo */
+    position: relative; /* Necessário para o posicionamento absoluto dos botões */
 }
 
 .close-btn {
@@ -508,4 +513,58 @@ select:focus {
             color: black;
             text-decoration: none;
             cursor: pointer;
+        }
+
+
+        #report-form {
+            flex: 1; /* Faz com que o formulário ocupe o espaço restante */
+            display: flex;
+            flex-direction: column; /* Organiza os elementos do formulário verticalmente */
+        }
+        
+        /* Estilos para o contêiner de botões */
+        .botao {
+            display: flex;
+            justify-content: space-between; /* Distribui os botões com espaço igual entre eles */
+            gap: 10px; /* Espaço entre os botões */
+            margin-top: auto; /* Empurra os botões para a parte inferior do contêiner do formulário */
+        }
+        
+        /* Estilos gerais para os botões dentro do contêiner */
+        .botao button {
+            background-color: #007bff; /* Cor de fundo padrão */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            flex: 1; /* Faz com que os botões ocupem o mesmo espaço */
+        }
+        
+        /* Estilos específicos para cada botão */
+        .botao button[type="submit"] {
+            background-color: #28a745; /* Verde para Imprimir */
+        }
+        
+        .botao button#reset-filters {
+            background-color: #ffc107; /* Amarelo para Resetar Filtros */
+            color: black; /* Texto preto para melhor contraste no botão amarelo */
+        }
+        
+        .botao button#set-status-absent {
+            background-color: #dc3545; /* Vermelho para Finalizar Dia */
+        }
+        
+        /* Efeitos de hover e active para os botões */
+        .botao button:hover {
+            background-color: #0056b3; /* Azul mais escuro para hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para hover */
+        }
+        
+        .botao button:active {
+            background-color: #003d7a; /* Azul ainda mais escuro para active */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra reduzida para active */
         }

@@ -28,6 +28,15 @@
     </div>
     <script>
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Define o foco no campo de entrada quando a página é carregada
+    const codigoAlunoInput = document.getElementById('codigoAluno');
+    if (codigoAlunoInput) {
+        codigoAlunoInput.focus();
+    }
+});
+
+
 function atualizarHorario() {
             const agora = new Date();
             const horas = String(agora.getHours()).padStart(2, '0');

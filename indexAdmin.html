@@ -136,21 +136,6 @@
     </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- O pop-up imprimir -->
 <div id="popup-impr-cards-popup" class="popup">
     <div class="popup-content">
@@ -172,7 +157,7 @@
             <div id="sub-filtro-container" style="display: none;">
                 <label for="sub-filtro">Detalhamento</label>
                 <select id="sub-filtro" name="sub-filtro">
-                    <!-- Opções serão preenchidas dinamicamente -->
+                    <!-- Opções adicionais serão preenchidas dinamicamente -->
                 </select><br>
             </div>
 
@@ -180,19 +165,14 @@
                 <label for="search-input" id="input-label"></label>
                 <input type="text" id="search-input" name="search-input" placeholder="Digite aqui...">
             </div><br>
-
-            <button type="submit">Imprimir</button>
-            <button type="button" id="reset-filters">Resetar Filtros</button>
-            <button type="button" id="set-status-absent">Finalizar Dia</button>
+            <div class="botao">
+                <button type="submit">Imprimir</button>
+                <button type="button" id="reset-filters">Resetar Filtros</button>
+                <button type="button" id="set-status-absent">Finalizar Dia</button>
+            </div>
         </form>
     </div>
 </div>
-
-
-    
-    
-
-
 
     <script>
 
@@ -235,19 +215,6 @@ function atualizarListaNomes() {
     });
 }
 
-// Função para apagar a lista e limpar o localStorage
-// function apagarLista() {
-//     const listaNomes = document.getElementById("listaNomes");
-//     while (listaNomes.firstChild) {
-//         listaNomes.removeChild(listaNomes.firstChild);
-//     }
-//     nomesArmazenados = []; // Limpa o array de nomes
-//     localStorage.removeItem('nomes'); // Remove o item do localStorage
-// }
-
-// // Adiciona o event listener ao botão
-// const apagarListaBtn = document.getElementById('apagarListaBtn');
-// apagarListaBtn.addEventListener('click', apagarLista);
 
 // Atualiza a lista ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
@@ -437,9 +404,6 @@ function loadCards() {
             const searchTerm = searchInput.value.trim();
             loadCardList(searchTerm); // Carregar cartões filtrados com base na pesquisa
         });
-    
-        // Carregar cartões ao abrir a página
-       // window.addEventListener('load', loadCards);
 
         function updateClock() {
     const now = new Date();
@@ -489,11 +453,6 @@ function prevSlide() {
 
 // Optionally, you can add automatic slide transition
 setInterval(nextSlide, 8000);
-
-
-
-
-
 
 // Função para procurar e exibir a série correspondente a um nome
 function procurarSerie(nome) {
@@ -560,11 +519,17 @@ function loadTableData() {
         });
 }
 
+// Atualiza a tabela imediatamente quando a página carrega
+loadTableData();
+
+// Atualiza a tabela a cada 2 segundos
+setInterval(loadTableData, 2000);
+
 
 // Função para obter o texto do status com base no valor do flag
 function getStatusText(flag) {
-    if (flag === 2) return "SAIDA";
     if (flag === 1) return "ENTRADA";
+    if (flag === 2) return "SAIDA";
     return " ";
 }
 
@@ -586,30 +551,6 @@ function getStatusText(flag) {
             window.onload = printPDF;
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
-
-
-
-
-
-
-
-
-
         document.addEventListener('DOMContentLoaded', function() {
     var btn = document.getElementById('popup-impr-cards');
     var popup = document.getElementById('popup-impr-cards-popup');
@@ -628,7 +569,8 @@ function getStatusText(flag) {
     function updateFilters() {
         var selectedValue = filtroImpr.value;
 
-        subFiltro.innerHTML = '';
+        // Limpa os filtros anteriores
+        subFiltro.innerHTML = 'none';
         subFiltroContainer.style.display = 'none';
         inputContainer.style.display = 'none';
 
@@ -651,6 +593,19 @@ function getStatusText(flag) {
         } else if (selectedValue === 'codigo') {
             inputLabel.textContent = 'Digite o código:';
             inputContainer.style.display = 'block';
+        } else if (selectedValue === 'Ausente' || selectedValue === 'Entrada' || selectedValue === 'Saida') {
+            subFiltroContainer.style.display = 'block';
+            var options = [
+                'Geral', '1EF', '2EF', '3EF', '4EF', '5EF',
+                '6EF', '7EF', '8EF', '9EF', '1EM',
+                '2EM', '3EM'
+            ];
+            options.forEach(function(optionText) {
+                var option = document.createElement('option');
+                option.value = optionText;
+                option.textContent = optionText;
+                subFiltro.appendChild(option);
+            });
         }
     }
 
@@ -689,26 +644,6 @@ function getStatusText(flag) {
         }
     };
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     </script>

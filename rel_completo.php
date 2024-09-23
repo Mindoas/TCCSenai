@@ -1,80 +1,134 @@
 <?php
-require('C:\xampp\htdocs\TCCSenai\FPDF\fpdf.php');
+require('C:\xampp\htdocs\TCC\TCCSenai-1\FPDF\fpdf.php');
 
+// Conexão com o banco de dados
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "meu_banco_frequencia";
 
-// Cria uma nova conexão com o banco de dados
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Verifica se houve um erro na conexão
+// Verifique a conexão
 if ($conn->connect_error) {
-    die("Falha na conexão com o banco de dados: " . $conn->connect_error);
+    die("Falha na conexão: " . $conn->connect_error);
+}
+setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'portuguese');
+
+
+// Obtenha o filtro selecionado
+$filtro = isset($_GET['filtro-impr']) ? $_GET['filtro-impr'] : '';
+$subFiltro = isset($_GET['sub-filtro']) ? $_GET['sub-filtro'] : '';
+$searchInput = isset($_GET['search-input']) ? $_GET['search-input'] : '';
+
+// Criação da classe PDF
+class PDF extends FPDF
+{
+    function Header()
+    {
+        $this->SetFont('Arial', 'B', 12);
+        $this->Cell(0, 10, utf8_decode('Relatório de Alunos'), 0, 1, 'C');
+        $this->Ln(10);
+    }
+
+    function Footer()
+    {
+        $this->SetY(-15);
+        $this->SetFont('Arial', 'I', 8);
+        $this->Cell(0, 10, 'Pagina ' . $this->PageNo(), 0, 0, 'C');
+    }
 }
 
-$filtro = isset($_GET['filtro-impr']) ? $conn->real_escape_string($_GET['filtro-impr']) : '';
-$subFiltro = isset($_GET['sub-filtro']) ? $conn->real_escape_string($_GET['sub-filtro']) : '';
-$searchInput = isset($_GET['search-input']) ? $conn->real_escape_string($_GET['search-input']) : '';
-
-// echo "$subFiltro";
-
-$sql = "SELECT nome, serie, datas AS horario, status FROM paineladm JOIN cartoes ON cartoes_id = id WHERE 1=1";
-
-if ($filtro === 'Completo') {
-    $sql .= " AND DATE(datas) = CURDATE()";
-} elseif ($filtro === 'Serie' && !empty($subFiltro)) {
-    $sql .= " AND serie = ?";
-} elseif ($filtro === 'Nome' && !empty($searchInput)) {
-    $sql .= " AND nome LIKE ?";
-} elseif ($filtro === 'codigo' && !empty($searchInput)) {
-    $sql .= " AND cartoes_id = ?";
-} elseif ($filtro === 'Entrada') {
-    $sql .= " AND status = 'Entrada'";
-} elseif ($filtro === 'Saida') {
-    $sql .= " AND status = 'Saida'";
-} elseif ($filtro === 'Ausente') {
-    $sql .= " AND status = 'Ausente'";
-}
-
-$stmt = $conn->prepare($sql);
-
-if ($filtro === 'Serie' && !empty($subFiltro)) {
-    $stmt->bind_param('s', $subFiltro);
-} elseif (($filtro === 'Nome' || $filtro === 'codigo') && !empty($searchInput)) {
-    $searchTerm = ($filtro === 'Nome') ? "%$searchInput%" : $searchInput;
-    $stmt->bind_param('s', $searchTerm);
-}
-
-$stmt->execute();
-$result = $stmt->get_result();
-
-$pdf = new FPDF();
+// Instância do PDF
+$pdf = new PDF();
 $pdf->AddPage();
-$pdf->SetFont('Arial', 'B', 12);
-$pdf->Cell(0, 10, 'Relatorio de Painel ADM', 0, 1, 'C');
-$pdf->Ln(10);
+$pdf->SetFont('Arial', '', '12');
 
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(60, 10, 'Nome', 1);
-$pdf->Cell(60, 10, 'Serie', 1);
-$pdf->Cell(60, 10, 'Horario', 1);
-$pdf->Cell(30, 10, 'Status', 1);
-$pdf->Ln();
+// Construção da consulta SQL conforme o filtro selecionado
+if ($filtro === 'Ausente') {
+    $sql = "SELECT cartoes.nome, cartoes.serie, cartoes.flag, paineladm.datas 
+            FROM cartoes 
+            LEFT JOIN paineladm ON paineladm.cartoes_id = cartoes.id
+            WHERE cartoes.flag = 0";
+    
+    if ($subFiltro !== 'Geral') {
+        $sql .= " AND cartoes.serie = '$subFiltro'";
+    }
 
-$pdf->SetFont('Arial', '', 10);
-while ($row = $result->fetch_assoc()) {
-    $pdf->Cell(60, 10, $row['nome'], 1);
-    $pdf->Cell(60, 10, $row['serie'], 1);
-    $pdf->Cell(60, 10, $row['horario'], 1);
-    $pdf->Cell(30, 10, $row['status'], 1);
-    $pdf->Ln();
+} else {
+    $sql = "SELECT paineladm.datas, cartoes.nome, cartoes.serie, paineladm.status 
+            FROM paineladm 
+            LEFT JOIN cartoes ON paineladm.cartoes_id = cartoes.id";
+
+    switch ($filtro) {
+        case 'Completo':
+            $sql .= " WHERE DATE(paineladm.datas) = CURDATE()"; // Ajuste conforme o campo de data
+            break;
+
+        case 'Serie':
+            if ($subFiltro !== 'Geral') {
+                $sql .= " WHERE cartoes.serie = '$subFiltro'";
+            }
+            break;
+
+        case 'Nome':
+            $sql .= " WHERE cartoes.nome LIKE '%$searchInput%'";
+            break;
+
+        case 'codigo':
+            $sql .= " WHERE cartoes.info = '$searchInput'";
+            break;
+
+        case 'Entrada':
+        case 'Saida':
+            $sql .= " WHERE paineladm.status = '$filtro'";
+            if ($subFiltro !== 'Geral') {
+                $sql .= " AND cartoes.serie = '$subFiltro'";
+            }
+            break;
+    }
 }
 
+// Executa a consulta
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Cabeçalhos da tabela
+    $pdf->Cell(65, 10, 'Nome', 1);
+    $pdf->Cell(40, 10, 'Serie', 1);
+    $pdf->Cell(30, 10, 'Data', 1);   // Adicionando coluna de Data
+    $pdf->Cell(30, 10, 'Hora', 1);   // Adicionando coluna de Hora
+    $pdf->Cell(30, 10, 'Status', 1);
+    $pdf->Ln();
+
+    while ($row = $result->fetch_assoc()) {
+        $status = isset($row['flag']) ? ($row['flag'] == 1 ? 'Entrada' : ($row['flag'] == 2 ? 'Saida' : 'Ausente')) : $row['status'];
+
+    // Extração de data e hora da coluna 'datas'
+    if (!empty($row['datas'])) {
+        $dataHora = explode(' ', $row['datas']);
+        $data = isset($dataHora[0]) ? $dataHora[0] : $data;
+        $hora = isset($dataHora[1]) ? $dataHora[1] : $hora;
+    } else {
+        $data = ' ';
+        $hora = ' ';
+    }
+
+        // Preenchendo as células com os dados corretos
+        $pdf->Cell(65, 10, utf8_decode($row['nome']), 1);
+        $pdf->Cell(40, 10, $row['serie'], 1);
+        $pdf->Cell(30, 10, $data, 1); // Preenchendo a data
+        $pdf->Cell(30, 10, $hora, 1); // Preenchendo a hora
+        $pdf->Cell(30, 10, $status, 1);
+        $pdf->Ln();
+    }
+} else {
+    $pdf->Cell(0, 10, 'Nenhum registro encontrado.', 0, 1);
+}
+
+// Fechar conexão
 $conn->close();
 
-// Envia o PDF para o navegador
-$filename = 'relatorio_painel_adm_' . date('Ymd_His') . '.pdf';
-$pdf->Output('I', $filename);
+// Geração do PDF
+$pdf->Output('D', 'Relatorio.pdf');
 ?>
